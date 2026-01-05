@@ -9,6 +9,7 @@ import authRoutes from './routes/authRoutes';
 import contentRoutes from './routes/contentRoutes';
 import newsletterRoutes from './routes/newsletterRoutes';
 import contactRoutes from './routes/contactRoutes';
+import paymentRoutes from './routes/paymentRoutes';
 
 import swaggerUi from 'swagger-ui-express';
 import { specs } from './config/swagger';
@@ -35,6 +36,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/posts', contentRoutes);
 app.use('/api/newsletter', newsletterRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/api/payments', paymentRoutes);
 
 // Base route
 app.get('/', (req, res) => {

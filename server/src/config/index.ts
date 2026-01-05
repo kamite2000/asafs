@@ -13,6 +13,11 @@ const envSchema = z.object({
   SMTP_USER: z.string().optional(),
   SMTP_PASS: z.string().optional(),
   SMTP_FROM: z.string().optional(),
+  STRIPE_SECRET_KEY: z.string().optional(),
+  MAISHA_PAY_API_KEY: z.string().optional(),
+  MAISHA_PAY_MERCHANT_ID: z.string().optional(),
+  FRONTEND_URL: z.string().default('http://localhost:5173'),
+  BACKEND_URL: z.string().default('http://localhost:5000'),
 });
 
 const envVars = envSchema.safeParse(process.env);
@@ -34,4 +39,13 @@ export const config = {
     pass: envVars.data.SMTP_PASS,
     from: envVars.data.SMTP_FROM,
   },
+  stripe: {
+    secretKey: envVars.data.STRIPE_SECRET_KEY,
+  },
+  maishaPay: {
+    apiKey: envVars.data.MAISHA_PAY_API_KEY,
+    merchantId: envVars.data.MAISHA_PAY_MERCHANT_ID,
+  },
+  frontendUrl: envVars.data.FRONTEND_URL,
+  backendUrl: envVars.data.BACKEND_URL,
 };
