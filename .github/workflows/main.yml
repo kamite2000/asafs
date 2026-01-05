@@ -1,0 +1,73 @@
+name: ASAFS CI/CD
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-case: true
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install Frontend Dependencies
+      run: npm install
+
+    - name: Build Frontend
+      run: npm run build
+
+    - name: Install Backend Dependencies
+      run: |
+        cd server
+        npm install
+
+    - name: Prisma Generate
+      run: |
+        cd server
+        npx prisma generate
+
+    - name: Build Backend
+      run: |
+        cd server
+        npm run build
+
+  docker:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Login to GHCR
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build and push Frontend
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./Dockerfile
+        push: true
+        tags: ghcr.io/${{ github.repository }}/frontend:latest
+
+    - name: Build and push Backend
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./server/Dockerfile
+        push: true
+        tags: ghcr.io/${{ github.repository }}/backend:latest

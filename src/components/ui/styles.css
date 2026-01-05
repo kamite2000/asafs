@@ -1,0 +1,57 @@
+.main-container {
+    position: relative;
+    width: 100%;
+    height: 400px; /* Adjust based on your design */
+    background-color: black;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 90%, 0 100%); /* Creates the triangle deformation at the bottom */
+  }
+  
+  .top-left-rounded, .bottom-right-rounded {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background-color: black;
+    border-radius: 50%;
+  }
+  
+  .top-left-rounded {
+    top: 0;
+    left: 0;
+  }
+  
+  .bottom-right-rounded {
+    bottom: 0;
+    right: 0;
+  }
+  
+  .video-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+  }
+  
+  .video-wrapper {
+    margin-top: 20px;
+  }
+  
+  .left-hand-images, .right-hand-images {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  .left-hand-images {
+    left: 20px;
+  }
+  
+  .right-hand-images {
+    right: 20px;
+  }
+  
+  .left-hand-images img, .right-hand-images img {
+    display: block;
+    margin: 10px 0;
+  }

@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./server/prisma/dev.db:/app/server/prisma/dev.db
+      - ./server/uploads:/app/server/uploads
+    environment:
+      - DATABASE_URL=file:./dev.db
+      - JWT_SECRET=${JWT_SECRET}
+      - PORT=3000
+    restart: always
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: always
