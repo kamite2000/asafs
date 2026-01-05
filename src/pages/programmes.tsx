@@ -3,12 +3,13 @@ import { useLocation } from 'react-router-dom';
 import { useContent } from '@/lib/ContentContext';
 import { ProgramCard } from '@/components/programCard';
 import Footer from '@/components/ui/Footer';
+import { useTranslation } from 'react-i18next';
 
 export const Programs = () => {
+  const { t } = useTranslation();
   const location = useLocation();
   const { getPublishedPostsByType } = useContent();
   const programmePosts = getPublishedPostsByType('programme');
-  console.log(location.state); // Accède aux données passées
 
   return (
     <section className="bg-white dark:bg-slate-950 transition-colors duration-300">
@@ -24,17 +25,16 @@ export const Programs = () => {
         {/* Content */}
         <div className="relative z-10 container mx-auto px-6 h-full flex flex-col justify-center text-white">
           <div className="inline-block px-3 py-1 bg-blue-600/20 backdrop-blur-md border border-blue-400/30 rounded-full text-blue-400 text-[10px] font-black tracking-widest uppercase mb-4 self-start">
-            Impact Direct
+            {t('programs.badge')}
           </div>
           <h1 className="text-3xl md:text-4xl font-black tracking-tight mb-4 uppercase">
-            NOS <span className="text-blue-500 italic">PROGRAMMES</span>
+            {t('nav.programs_pre')} <span className="text-blue-500 italic">{t('nav.programs_highlight')}</span>
           </h1>
 
           <div className="w-12 h-1 bg-blue-600 mb-6" />
 
           <p className="text-base md:text-lg max-w-2xl leading-relaxed text-gray-200 font-medium">
-            Des initiatives innovantes conçues pour l'autonomisation, 
-            l'inclusion sociale et le développement professionnel des femmes sourdes en RDC.
+            {t('programs.hero_subtitle')}
           </p>
         </div>
       </div>
@@ -44,16 +44,16 @@ export const Programs = () => {
         <div className="space-y-12">
           <ProgramCard
             image="https://images.unsplash.com/photo-1544650030-3c997b712911?q=80&w=2070&auto=format&fit=crop"
-            title="Formation Professionnelle"
-            subtitle="Développer les Compétences pour l'Avenir"
-            description="Le programme de Formation Professionnelle d'ASAFS vise à offrir aux femmes sourdes les compétences nécessaires pour accéder à des emplois dignes et durables."
+            title={t('programs.p1_title')}
+            subtitle={t('programs.p1_subtitle')}
+            description={t('programs.p1_desc')}
           />
 
           <ProgramCard
             image="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=2070&auto=format&fit=crop"
-            title="Développement Personnel"
-            subtitle="Épanouissement et Confiance en Soi"
-            description="Nos ateliers aident les femmes sourdes à renforcer leur leadership et à développer des compétences essentielles pour leur vie quotidienne."
+            title={t('programs.p2_title')}
+            subtitle={t('programs.p2_subtitle')}
+            description={t('programs.p2_desc')}
             imagePosition="right"
           />
         </div>
@@ -63,7 +63,7 @@ export const Programs = () => {
           <div className="mt-20">
             <div className="text-center mb-12">
               <h2 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white mb-2 tracking-tighter uppercase">
-                AUTRES <span className="text-blue-600 italic">ACTIONS</span>
+                {t('programs.other_pre')} <span className="text-blue-600 italic">{t('programs.other_highlight')}</span>
               </h2>
               <div className="w-12 h-1 bg-blue-600 mx-auto rounded-full" />
             </div>
@@ -87,8 +87,8 @@ export const Programs = () => {
                     <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-blue-600 transition-colors uppercase tracking-tight">{post.title}</h3>
                     <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2 mb-4 font-medium">{post.content}</p>
                     <div className="flex items-center justify-between pt-4 border-t border-slate-50 dark:border-slate-800">
-                       <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider">{post.author || 'Équipe ASAFS'}</span>
-                       <button className="text-blue-600 dark:text-blue-400 text-xs font-black uppercase hover:underline">Détails →</button>
+                       <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider">{post.author || t('programs.team')}</span>
+                       <button className="text-blue-600 dark:text-blue-400 text-xs font-black uppercase hover:underline">{t('programs.details')} →</button>
                     </div>
                   </div>
                 </div>

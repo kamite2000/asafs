@@ -2,8 +2,10 @@ import React from 'react';
 import { useContent } from '@/lib/ContentContext';
 import Footer from '@/components/ui/Footer';
 import { Calendar, Users, Target, Award, ArrowRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const About = () => {
+  const { t } = useTranslation();
   const { getPublishedPostsByType } = useContent();
   const [selectedCategory, setSelectedCategory] = React.useState('Toutes');
   
@@ -27,13 +29,13 @@ const About = () => {
         
         <div className="relative z-10 text-center px-4 max-w-4xl">
           <div className="inline-block px-3 py-1 bg-blue-600/20 backdrop-blur-md border border-blue-400/30 rounded-full text-blue-400 text-[10px] font-black tracking-widest uppercase mb-4">
-            Notre Mission
+            {t('mission.title')}
           </div>
-          <h1 className="text-3xl md:text-5xl font-black text-white mb-4 tracking-tighter uppercase">
-            QUI SOMMES-NOUS <span className="text-blue-500 italic">!?</span>
+          <h1 className="text-3xl md:text-5xl font-black text-white mb-4 tracking-tighter uppercase whitespace-pre-line">
+            {t('about.hero_title')}
           </h1>
           <p className="text-lg text-gray-200 font-medium max-w-2xl mx-auto">
-            Découvrez notre histoire, nos objectifs et la vision qui nous anime au quotidien.
+            {t('about.hero_subtitle')}
           </p>
         </div>
       </section>
@@ -58,12 +60,11 @@ const About = () => {
               <h2 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
                 Marthe YAKANGA ONIKI
               </h2>
-              <p className="text-blue-600 font-bold uppercase tracking-widest text-xs translate-y-[-0.5rem]">Coordinatrice Générale</p>
+              <p className="text-blue-600 font-bold uppercase tracking-widest text-xs translate-y-[-0.5rem]">{t('about.coordinator')}</p>
               
               <div className="prose prose-slate prose-sm max-w-none text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
                 <p className="text-base md:text-lg italic">
-                  "L'autonomisation des femmes sourdes n'est pas seulement un objectif, c'est un impératif de justice sociale. 
-                  À travers l'ASAFS, nous bâtissons un pont entre le silence et l'opportunité."
+                  "{t('about.quote')}"
                 </p>
               </div>
               
@@ -73,8 +74,8 @@ const About = () => {
                      <Target className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="text-[10px] text-slate-400 font-black uppercase tracking-wider">Vision</p>
-                    <p className="text-sm text-slate-700 dark:text-slate-200 font-bold">Inclusion Totale</p>
+                    <p className="text-[10px] text-slate-400 font-black uppercase tracking-wider">{t('about.vision_label')}</p>
+                    <p className="text-sm text-slate-700 dark:text-slate-200 font-bold">{t('about.vision_value')}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700">
@@ -82,8 +83,8 @@ const About = () => {
                      <Users className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="text-[10px] text-slate-400 font-black uppercase tracking-wider">Impact</p>
-                    <p className="text-sm text-slate-700 dark:text-slate-200 font-bold">Solidarité Active</p>
+                    <p className="text-[10px] text-slate-400 font-black uppercase tracking-wider">{t('about.impact_label')}</p>
+                    <p className="text-sm text-slate-700 dark:text-slate-200 font-bold">{t('about.impact_value')}</p>
                   </div>
                 </div>
               </div>
@@ -99,18 +100,13 @@ const About = () => {
         <div className="container mx-auto px-6 relative">
           <div className="text-center mb-16">
             <h2 className="text-2xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tighter mb-2 uppercase">
-              NOTRE <span className="text-blue-600 italic">PARCOURS</span>
+              {t('about.timeline_pre')} <span className="text-blue-600 italic">{t('about.timeline_highlight')}</span>
             </h2>
             <div className="w-12 h-1 bg-blue-600 mx-auto rounded-full" />
           </div>
 
           <div className="space-y-16">
-            {[
-              { year: '2019', title: 'L\'Eveil de la Conscience', text: 'Début des actions de sensibilisation et éducation sur la problématique du genre.', image: '/Rectangle 29.png', tag: 'AUTONOMIE' },
-              { year: '2020', title: 'Protection & Soutien', text: 'Création des premières cliniques juridiques pour les femmes victimes de SGBV.', image: '/Rectangle 30.png', tag: 'SOUVERAINETÉ' },
-              { year: '2021', title: 'Expansion des Droits', text: 'Renforcement du réseau d\'accompagnement juridique et social provincial.', image: '/Rectangle 25.png', tag: 'MOBILISATION' },
-              { year: '2023', title: 'Consolidation', text: 'Élargissement des programmes de formation pour l\'autonomisation économique.', image: '/Rectangle 27.png', tag: 'VALORISATION' }
-            ].map((item, index) => (
+            {(t('about.timeline_items', { returnObjects: true }) as any[]).map((item: any, index: number) => (
               <div key={item.year} className={`relative flex flex-col md:flex-row items-center gap-6 md:gap-16 ${index % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}>
                 <div className="absolute left-1/2 -translate-x-1/2 w-4 h-4 bg-blue-600 rounded-full border-2 border-white shadow-md z-10 hidden md:block" />
                 
@@ -139,7 +135,7 @@ const About = () => {
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-12">
             <h2 className="text-2xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tighter mb-4 uppercase">
-              NOS <span className="text-blue-600 italic">ACTIVITÉS</span> DE TERRAIN
+              {t('about.activities_pre')} <span className="text-blue-600 italic">{t('about.activities_highlight')}</span>
             </h2>
             
             <div className="flex flex-wrap justify-center gap-2 mb-8">
@@ -152,7 +148,7 @@ const About = () => {
                     : 'bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 text-slate-400 dark:text-slate-500 hover:border-blue-200'
                   }`}
                 >
-                  {cat}
+                  {cat === 'Toutes' ? t('about.cat_all') : cat}
                 </button>
               ))}
             </div>
@@ -166,7 +162,7 @@ const About = () => {
                      <div className="relative h-44 overflow-hidden">
                        <img src={activity.imageUrl} alt={activity.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                        <div className="absolute top-4 left-4 px-3 py-1 bg-white/95 dark:bg-slate-950/95 backdrop-blur-md rounded-full text-blue-600 dark:text-blue-400 text-[9px] font-black uppercase tracking-widest shadow-sm">
-                         {activity.category || 'Général'}
+                         {activity.category || t('about.cat_general')}
                        </div>
                      </div>
                    )}
@@ -187,7 +183,7 @@ const About = () => {
             ) : (
               <div className="col-span-full py-16 text-center bg-slate-50 dark:bg-slate-900 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-800">
                 <Target className="w-8 h-8 mx-auto mb-4 text-slate-300 dark:text-slate-700" />
-                <p className="text-slate-400 dark:text-slate-500 text-sm font-medium italic">Aucune activité dans cette catégorie.</p>
+                <p className="text-slate-400 dark:text-slate-500 text-sm font-medium italic">{t('about.no_activities')}</p>
               </div>
             )}
           </div>
@@ -199,9 +195,9 @@ const About = () => {
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex justify-between items-center mb-10">
             <h2 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tighter uppercase">
-              Actualités <span className="text-blue-600 italic">Récentes</span>
+              {t('about.news_pre')} <span className="text-blue-600 italic">{t('about.news_highlight')}</span>
             </h2>
-            <button className="text-blue-600 text-xs font-black uppercase tracking-widest hover:underline">Tout voir</button>
+            <button className="text-blue-600 text-xs font-black uppercase tracking-widest hover:underline">{t('about.view_all')}</button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -218,13 +214,13 @@ const About = () => {
                     {post.content}
                   </p>
                   <button className="flex items-center gap-2 text-[10px] font-black text-blue-600 uppercase tracking-widest hover:translate-x-1 transition-transform">
-                    Lire <ArrowRight className="w-3 h-3" />
+                    {t('about.read_more')} <ArrowRight className="w-3 h-3" />
                   </button>
                 </div>
               ))
             ) : (
               <div className="col-span-full py-12 text-center bg-white dark:bg-slate-900 rounded-3xl border border-dashed border-slate-200 dark:border-slate-800">
-                 <p className="text-slate-400 dark:text-slate-500 text-sm italic">Pas de nouvelles pour le moment.</p>
+                 <p className="text-slate-400 dark:text-slate-500 text-sm italic">{t('about.no_news')}</p>
               </div>
             )}
           </div>

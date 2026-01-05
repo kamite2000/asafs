@@ -1,20 +1,26 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Heart, Moon, Sun } from 'lucide-react';
+import { Menu, X, Heart, Moon, Sun, Globe } from 'lucide-react';
 import { useTheme } from '@/lib/ThemeContext';
+import { useTranslation } from 'react-i18next';
 
 const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
+  const { t, i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
   const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'À propos', path: '/about' },
-    { name: 'Programmes', path: '/programmes' },
-    { name: 'Événements', path: '/evenement' },
-    { name: 'Contact', path: '/contact' },
+    { name: t('nav.home'), path: '/' },
+    { name: t('nav.about'), path: '/about' },
+    { name: t('nav.programs'), path: '/programmes' },
+    { name: t('nav.events'), path: '/evenement' },
+    { name: t('nav.contact'), path: '/contact' },
   ];
+
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng);
+  };
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -60,6 +66,19 @@ const Navbar = () => {
 
           {/* CTA Section */}
           <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 mr-2 px-2 py-1 bg-slate-50 dark:bg-slate-800 rounded-full border border-slate-100 dark:border-slate-800">
+               <Globe className="w-3 h-3 text-slate-400" />
+               <select 
+                 onChange={(e) => changeLanguage(e.target.value)}
+                 value={i18n.language}
+                 className="bg-transparent text-[10px] font-bold text-slate-600 dark:text-slate-400 outline-none cursor-pointer uppercase"
+               >
+                 <option value="fr">FR</option>
+                 <option value="en">EN</option>
+                 <option value="swa">SWA</option>
+               </select>
+            </div>
+
             <button
               onClick={toggleTheme}
               className="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-yellow-400 hover:scale-110 transition-all duration-300"
@@ -73,7 +92,7 @@ const Navbar = () => {
               className="hidden sm:flex items-center gap-2 px-5 py-2 text-[10px] font-black text-slate-950 bg-[#F4D227] rounded-full hover:bg-[#ffe045] transition-all duration-300 uppercase tracking-widest"
             >
               <Heart className="w-3 h-3 fill-current" />
-              DONNER
+              {t('nav.donate')}
             </Link>
 
             {/* Mobile Toggle */}
@@ -111,7 +130,7 @@ const Navbar = () => {
             className="flex items-center justify-center gap-2 w-full p-4 bg-[#F4D227] text-slate-950 font-black rounded-2xl"
           >
             <Heart className="w-5 h-5 fill-current" />
-            FAIRE UN DON
+            {t('nav.donate')}
           </Link>
         </div>
       </div>

@@ -1,8 +1,11 @@
 import React from 'react';
 import Footer from '@/components/ui/Footer';
 import { Mail, Phone, MapPin, Send, MessageSquare, Clock } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Contact: React.FC = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="bg-white dark:bg-slate-950 min-h-screen transition-colors duration-300">
       {/* Hero Section */}
@@ -14,13 +17,13 @@ const Contact: React.FC = () => {
         
         <div className="relative z-10 text-center px-4 max-w-4xl">
           <div className="inline-block px-4 py-1.5 bg-blue-600/20 backdrop-blur-md border border-blue-400/30 rounded-full text-blue-400 text-sm font-bold tracking-widest uppercase mb-6">
-            Contact
+            {t('nav.contact')}
           </div>
-          <h1 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tighter">
-            DISCUTONS DE <span className="text-blue-500 italic">L'IMPACT</span>
+          <h1 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tighter uppercase">
+            {t('contact.title')}
           </h1>
           <p className="text-xl text-gray-400 font-medium max-w-2xl mx-auto">
-            Vous avez une question, une proposition de partenariat ou souhaitez nous soutenir ? Notre équipe est à votre écoute.
+            {t('contact.subtitle')}
           </p>
         </div>
       </section>
@@ -73,7 +76,7 @@ const Contact: React.FC = () => {
                   <MessageSquare className="w-6 h-6" />
                 </div>
                 <div>
-                   <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Envoyez-nous un message</h2>
+                   <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{t('contact.title')}</h2>
                    <p className="text-slate-400 dark:text-slate-500 text-sm font-medium">Nous vous répondrons sous 24h à 48h.</p>
                 </div>
               </div>
@@ -108,7 +111,7 @@ const Contact: React.FC = () => {
               >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Nom Complet</label>
+                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t('contact.name')}</label>
                     <input 
                       name="name"
                       type="text" 
@@ -118,7 +121,7 @@ const Contact: React.FC = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Email</label>
+                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t('contact.email')}</label>
                     <input 
                       name="email"
                       type="email" 
@@ -130,7 +133,7 @@ const Contact: React.FC = () => {
                 </div>
                 
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Objet</label>
+                  <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t('contact.subject')}</label>
                   <input 
                     name="subject"
                     type="text" 
@@ -141,7 +144,7 @@ const Contact: React.FC = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Message</label>
+                  <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t('contact.message')}</label>
                   <textarea 
                     name="message"
                     required
@@ -152,7 +155,7 @@ const Contact: React.FC = () => {
                 </div>
 
                 <button type="submit" className="flex items-center justify-center gap-3 w-full py-5 bg-blue-600 text-white font-black rounded-2xl hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-900/20 transition-all group disabled:opacity-50">
-                  ENVOYER LE MESSAGE
+                  {t('contact.send')}
                   <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                 </button>
               </form>

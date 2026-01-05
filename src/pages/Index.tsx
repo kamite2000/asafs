@@ -14,9 +14,11 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { useContent } from "@/lib/ContentContext";
-import { BookOpen, Video, FileText, ChevronRight, Play, Target, Shield, Salad, Scale, HeartHandshake } from "lucide-react";
+import { BookOpen, Video, FileText, ChevronRight, Play, Target, Shield, Salad, Scale, HeartHandshake, ExternalLink } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const Index = () => {
+  const { t } = useTranslation();
   const { getPublishedPostsByType } = useContent();
   const carouselPosts = getPublishedPostsByType('carousel');
   const eventPosts = getPublishedPostsByType('evenement').slice(0, 2);
@@ -36,27 +38,26 @@ const Index = () => {
         
         <div className="relative z-10 max-w-4xl space-y-4">
           <div className="inline-block px-3 py-1 bg-blue-600/20 backdrop-blur-md border border-blue-400/30 rounded-full text-blue-400 text-[10px] font-black tracking-widest uppercase mb-2">
-            Solidarité & Impact
+            {t('hero.badge')}
           </div>
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tight">
-            L'ACTION SOLIDAIRE POUR <br />
+            {t('hero.title_part1')} <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">
-              L'AUTONOMISATION
+              {t('hero.title_part2')}
             </span> <br />
-            DES FEMMES SOURDES.
+            {t('hero.title_part3')}
           </h1>
           
           <p className="text-base md:text-lg text-gray-300 max-w-2xl font-medium leading-relaxed">
-            Une association inclusive, propulsée par un souffle de solidarité. 
-            Ensemble, nous brisons les barrières et créons des opportunités.
+            {t('hero.subtitle')}
           </p>
           
           <div className="flex flex-col sm:flex-row gap-3 pt-4">
             <Link to="/about" className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg shadow-lg shadow-blue-900/40 transition-all hover:scale-105 active:scale-95 text-center">
-              Notre Histoire
+              {t('hero.btn_history')}
             </Link>
             <Link to="/contact" className="px-8 py-3 bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition-all text-center">
-              Nous Contacter
+              {t('hero.btn_contact')}
             </Link>
           </div>
         </div>
@@ -67,17 +68,17 @@ const Index = () => {
         <div className="container mx-auto px-6 relative z-10">
           <div className="text-center mb-12">
              <h2 className="text-2xl md:text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tighter">
-              L'IMPACT EN <span className="text-blue-600 italic">CHIFFRES</span>
+              {t('stats.title')} <span className="text-blue-600 italic">{t('stats.subtitle')}</span>
             </h2>
             <div className="w-12 h-1 bg-blue-600 mx-auto rounded-full" />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { label: "Personnes sourdes en RDC", value: "+ 2,22 M", icon: "🌍" },
-              { label: "Femmes formées", value: "250+", icon: "🎓" },
-              { label: "Participants aux ateliers", value: "±300", icon: "🤝" },
-              { label: "Projets complétés", value: "15", icon: "✅" }
+              { label: t('stats.stat1'), value: "+ 2,22 M", icon: "🌍" },
+              { label: t('stats.stat2'), value: "250+", icon: "🎓" },
+              { label: t('stats.stat3'), value: "±300", icon: "🤝" },
+              { label: t('stats.stat4'), value: "15", icon: "✅" }
             ].map((stat, i) => (
               <div key={i} className="group bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 transition-all hover:shadow-xl hover:border-blue-100 hover:-translate-y-1">
                 <div className="text-3xl mb-3 grayscale group-hover:grayscale-0 transition-all">{stat.icon}</div>
@@ -99,10 +100,10 @@ const Index = () => {
         <div className="container mx-auto px-6 relative z-10">
           <div className="text-center mb-12">
             <div className="inline-block px-2.5 py-0.5 bg-blue-600/20 border border-blue-500/30 rounded-full text-blue-400 text-[9px] font-black tracking-widest uppercase mb-3">
-              Vision & Engagement
+              {t('mission.badge')}
             </div>
             <h2 className="text-2xl md:text-4xl font-black text-white tracking-tighter uppercase leading-none">
-              NOTRE <span className="text-blue-500 italic">MISSION</span>
+              {t('mission.title')}
             </h2>
           </div>
 
@@ -120,7 +121,7 @@ const Index = () => {
               </div>
               <div className="absolute bottom-6 left-6 right-6">
                 <p className="text-white/60 text-[10px] font-black uppercase tracking-widest text-center">
-                  Découvrez l'histoire derrière notre action
+                  {t('mission.discover')}
                 </p>
               </div>
             </div>
@@ -133,10 +134,10 @@ const Index = () => {
         <div className="container mx-auto px-6">
           <div className="text-center mb-12">
             <div className="inline-block px-2.5 py-0.5 bg-blue-600/10 border border-blue-600/20 rounded-full text-blue-600 text-[9px] font-black tracking-widest uppercase mb-3 text-center">
-              Nos Priorités
+              {t('objectives.badge')}
             </div>
             <h2 className="text-2xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tighter uppercase text-center">
-              NOS <span className="text-blue-600 italic">OBJECTIFS</span>
+              {t('objectives.title')}
             </h2>
           </div>
 
@@ -144,28 +145,28 @@ const Index = () => {
             {[
               {
                 icon: <Shield className="w-5 h-5 text-blue-600" />,
-                title: "Droit & Protection",
-                content: "Promouvoir, Prévenir et Défendre les droits des femmes sourdes en particulier et de la population dans les domaines de la santé, éducation et entrepreneuriat."
+                title: t('objectives.obj1_title'),
+                content: t('objectives.obj1_desc')
               },
               {
                 icon: <Target className="w-5 h-5 text-blue-600" />,
-                title: "Inclusion & Genre",
-                content: "Promouvoir activement l'égalité des genres, l'inclusion sociale et lutter contre toute forme de discrimination au sein de la société."
+                title: t('objectives.obj2_title'),
+                content: t('objectives.obj2_desc')
               },
               {
                 icon: <Salad className="w-5 h-5 text-blue-600" />,
-                title: "Sécurité Alimentaire",
-                content: "Lutter contre la famine en compensant le déficit alimentaire par la promotion et la diffusion de pratiques agricoles innovantes et durables."
+                title: t('objectives.obj3_title'),
+                content: t('objectives.obj3_desc')
               },
               {
                 icon: <Scale className="w-5 h-5 text-blue-600" />,
-                title: "Accès à la Justice",
-                content: "Accompagner juridiquement les femmes sourdes, en particulier les victimes de violences, pour leur garantir un accès équitable à la justice."
+                title: t('objectives.obj4_title'),
+                content: t('objectives.obj4_desc')
               },
               {
                 icon: <HeartHandshake className="w-5 h-5 text-blue-600" />,
-                title: "Plaidoyer Social",
-                content: "Militer pour les droits des femmes vulnérables et celles vivant avec handicap, victimes de violences sexuelles ou basées sur le genre."
+                title: t('objectives.obj5_title'),
+                content: t('objectives.obj5_desc')
               }
             ].map((obj, i) => (
               <div key={i} className="group relative bg-slate-50 dark:bg-slate-900 p-7 rounded-2xl border border-slate-100 dark:border-slate-800 hover:bg-white dark:hover:bg-slate-800 hover:shadow-xl hover:border-blue-100 transition-all duration-300 flex flex-col h-full">
@@ -191,12 +192,12 @@ const Index = () => {
           <div className="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
             <div className="text-left">
               <h2 className="text-2xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tighter uppercase">
-                ÉVÉNEMENTS <span className="text-blue-600 italic">À VENIR</span>
+                {t('events.title')}
               </h2>
-              <p className="text-slate-500 dark:text-slate-400 mt-1 max-w-xl text-base">Découvrez nos prochaines activités et ateliers de sensibilisation.</p>
+              <p className="text-slate-500 dark:text-slate-400 mt-1 max-w-xl text-base">{t('events.subtitle')}</p>
             </div>
             <Link to="/evenement" className="text-blue-600 text-sm font-bold flex items-center gap-2 group mb-1">
-              Voir tout l'agenda <span className="group-hover:translate-x-1 transition-transform">→</span>
+              {t('events.view_all')} <span className="group-hover:translate-x-1 transition-transform">→</span>
             </Link>
           </div>
 
@@ -223,14 +224,14 @@ const Index = () => {
                       {event.content}
                     </p>
                     <Link to="/evenement" className="inline-block px-6 py-2 bg-white text-slate-900 text-xs font-bold rounded-lg hover:bg-blue-600 hover:text-white transition-all">
-                      En savoir plus
+                      {t('events.learn_more')}
                     </Link>
                   </div>
                 </div>
               ))
             ) : (
               <div className="col-span-2 py-8 text-center bg-slate-50 dark:bg-slate-900 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-800">
-                <p className="text-slate-400 text-sm font-medium italic">Aucun événement prévu pour le moment.</p>
+                <p className="text-slate-400 text-sm font-medium italic">{t('events.no_events')}</p>
               </div>
             )}
           </div>
@@ -242,13 +243,13 @@ const Index = () => {
         <div className="container mx-auto px-6">
           <div className="text-center mb-10">
             <div className="inline-block px-2.5 py-0.5 bg-blue-600/10 border border-blue-600/20 rounded-full text-blue-600 text-[9px] font-black tracking-widest uppercase mb-3">
-              Apprentissage & Outils
+              {t('resources.badge')}
             </div>
             <h2 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tighter uppercase">
-              RESSOURCES EN <span className="text-blue-600 italic">LANGUE DES SIGNES</span>
+              {t('resources.title')}
             </h2>
             <p className="text-slate-500 dark:text-slate-400 mt-2 max-w-xl mx-auto text-sm font-medium">
-              Des outils interactifs conçus pour faciliter la communication et l'inclusion.
+              {t('resources.subtitle')}
             </p>
           </div>
 
@@ -256,21 +257,27 @@ const Index = () => {
             {[
               { 
                 icon: <BookOpen className="w-5 h-5" />, 
-                title: "Dictionnaire LSF", 
-                desc: "Accédez à notre dictionnaire de langue des signes française en ligne.",
-                btn: "Consulter"
+                title: t('resources.res1_title'), 
+                desc: t('resources.res1_desc'),
+                btn: t('resources.res1_btn'),
+                link: "/dictionnaire",
+                external: false
               },
               { 
                 icon: <Video className="w-5 h-5" />, 
-                title: "Cours en Ligne", 
-                desc: "Apprenez la langue des signes avec nos cours vidéo interactifs.",
-                btn: "Commencer"
+                title: t('resources.res2_title'), 
+                desc: t('resources.res2_desc'),
+                btn: t('resources.res2_btn'),
+                link: "https://www.youtube.com/watch?v=GP3MGXvri_Y&list=PLaxcImf_H8aDo0v2EQRiv1Ml0Jg5WTI9o",
+                external: true
               },
               { 
                 icon: <FileText className="w-5 h-5" />, 
-                title: "Guide Pratique", 
-                desc: "Téléchargez notre guide pratique pour débuter en langue des signes.",
-                btn: "Télécharger"
+                title: t('resources.res1_btn') === "Consulter" ? "Guide Pratique" : t('resources.res3_title'), 
+                desc: t('resources.res3_desc'),
+                btn: t('resources.res3_btn'),
+                link: "https://www.lambert-lucas.com/wp-content/uploads/2018/10/petit_dictionnaire_oa_tr.pdf", 
+                external: true
               },
             ].map((resource, i) => (
               <div key={i} className="group bg-white dark:bg-slate-950 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-blue-200 transition-all duration-300">
@@ -281,9 +288,23 @@ const Index = () => {
                 <p className="text-[13px] text-slate-500 dark:text-slate-400 leading-relaxed mb-6 font-medium">
                   {resource.desc}
                 </p>
-                <Link to="#" className="inline-flex items-center gap-2 px-5 py-2 bg-slate-900 dark:bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest rounded-lg hover:bg-blue-600 transition-all">
-                  {resource.btn} <ChevronRight className="w-3 h-3" />
-                </Link>
+                {resource.external ? (
+                  <a 
+                    href={resource.link} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-5 py-2 bg-slate-900 dark:bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest rounded-lg hover:bg-blue-600 transition-all"
+                  >
+                    {resource.btn} <ExternalLink className="w-3 h-3" />
+                  </a>
+                ) : (
+                  <Link 
+                    to={resource.link} 
+                    className="inline-flex items-center gap-2 px-5 py-2 bg-slate-900 dark:bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest rounded-lg hover:bg-blue-600 transition-all"
+                  >
+                    {resource.btn} <ChevronRight className="w-3 h-3" />
+                  </Link>
+                )}
               </div>
             ))}
           </div>
@@ -298,9 +319,9 @@ const Index = () => {
         <div className="max-w-6xl mx-auto px-6 relative z-10">
           <div className="text-center mb-12">
             <h2 className="text-2xl md:text-4xl font-black text-white tracking-tighter mb-2 uppercase">
-              NOTRE <span className="text-blue-500 italic">HISTOIRE</span> EN IMAGES
+              {t('carousel.title')}
             </h2>
-            <p className="text-slate-400 text-base">Moments forts et impact de notre action au quotidien.</p>
+            <p className="text-slate-400 text-base">{t('carousel.subtitle')}</p>
           </div>
 
           {carouselPosts.length > 0 ? (
@@ -343,7 +364,7 @@ const Index = () => {
             </Carousel>
           ) : (
             <div className="py-16 text-center bg-white/5 rounded-3xl border border-white/10">
-               <p className="text-slate-500 text-sm italic">Galerie en cours de mise à jour...</p>
+               <p className="text-slate-500 text-sm italic">{t('carousel.no_images')}</p>
             </div>
           )}
         </div>

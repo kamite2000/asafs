@@ -1,8 +1,9 @@
 import React from 'react';
-import { Calendar } from 'lucide-react';
+import { Calendar as CalendarIcon } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { useContent } from "@/lib/ContentContext";
 import Footer from '@/components/ui/Footer';
+import { useTranslation } from 'react-i18next';
 import {
     Dialog,
     DialogContent,
@@ -12,6 +13,7 @@ import {
 } from "@/components/ui/dialog";
 
 function EventCard({ date, title, description }: { date: string; title: string; description: string }) {
+    const { t } = useTranslation();
     const getEventStatus = (eventDate: string) => {
         const now = new Date();
         const event = new Date(eventDate);
@@ -44,11 +46,11 @@ function EventCard({ date, title, description }: { date: string; title: string; 
     const getStatusText = (status: string) => {
         switch (status) {
             case 'past':
-                return 'Passé';
+                return t('events.status_past');
             case 'current':
-                return 'En cours';
+                return t('events.status_current');
             case 'future':
-                return 'À venir';
+                return t('events.status_future');
             default:
                 return '';
         }
@@ -79,7 +81,7 @@ function EventCard({ date, title, description }: { date: string; title: string; 
                     <div className="flex-1">
                         <div className="flex items-center gap-4 mb-2">
                             <div className="flex items-center gap-2 text-blue-600">
-                                <Calendar className="w-4 h-4" />
+                                <CalendarIcon className="w-4 h-4" />
                                 <span className="text-sm">{date}</span>
                             </div>
                             <div className="flex items-center gap-1.5">
@@ -99,7 +101,7 @@ function EventCard({ date, title, description }: { date: string; title: string; 
                     <DialogTitle className="text-2xl font-bold mb-2">{title}</DialogTitle>
                     <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
                         <div className="flex items-center gap-2">
-                            <Calendar className="w-4 h-4" />
+                            <CalendarIcon className="w-4 h-4" />
                             <span>{date}</span>
                         </div>
                         <div className="flex items-center gap-1.5">
@@ -116,9 +118,6 @@ function EventCard({ date, title, description }: { date: string; title: string; 
                         <p className="text-gray-700 leading-relaxed text-lg">
                             {description}
                         </p>
-                        <p className="text-gray-700 leading-relaxed text-lg mt-4">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </p>
                     </div>
                 </div>
             </DialogContent>
@@ -127,9 +126,8 @@ function EventCard({ date, title, description }: { date: string; title: string; 
 }
 
 export default function Events() {
+    const { t } = useTranslation();
     const location = useLocation();
-    console.log(location.state);
-
     const { getPublishedPostsByType } = useContent();
     const events = getPublishedPostsByType('evenement');
 
@@ -143,13 +141,13 @@ export default function Events() {
 
                 <div className="relative z-10 max-w-7xl mx-auto px-6">
                     <span className="inline-block px-2.5 py-0.5 bg-blue-600/30 backdrop-blur-md border border-blue-400/30 rounded-full text-blue-300 text-[9px] font-black tracking-widest uppercase mb-3">
-                        Calendrier
+                        {t('events.badge')}
                     </span>
                     <h1 className="text-2xl md:text-4xl font-black text-white mb-2 tracking-tighter uppercase">
-                        NOS <span className="text-blue-500 italic">ÉVÉNEMENTS</span>
+                        {t('events.hero_pre')} <span className="text-blue-500 italic">{t('events.hero_highlight')}</span>
                     </h1>
                     <p className="text-sm text-slate-400 max-w-xl leading-relaxed font-medium">
-                        Découvrez nos activités et participez à nos prochaines rencontres solidaires.
+                        {t('events.hero_subtitle')}
                     </p>
                 </div>
             </div>
@@ -177,8 +175,8 @@ export default function Events() {
                                                 {event.content}
                                             </p>
                                             <div className="flex items-center justify-between pt-3 mt-3 border-t border-slate-50 dark:border-slate-800/50">
-                                                 <span className="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">{event.author || 'ASAFS'}</span>
-                                                 <span className="text-blue-600 dark:text-blue-400 text-[10px] font-black uppercase group-hover:translate-x-1 transition-transform">Détails →</span>
+                                                 <span className="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">{event.author || t('programs.team')}</span>
+                                                 <span className="text-blue-600 dark:text-blue-400 text-[10px] font-black uppercase group-hover:translate-x-1 transition-transform">{t('events.details')} →</span>
                                             </div>
                                         </div>
                                     </div>
@@ -202,7 +200,7 @@ export default function Events() {
                         ))
                     ) : (
                         <div className="col-span-full py-12 text-center bg-slate-50 dark:bg-slate-900 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800">
-                             <p className="text-slate-400 dark:text-slate-500 font-black uppercase tracking-widest text-[10px] italic">Aucun événement.</p>
+                             <p className="text-slate-400 dark:text-slate-500 font-black uppercase tracking-widest text-[10px] italic">{t('events.no_events')}</p>
                         </div>
                     )}
                 </div>

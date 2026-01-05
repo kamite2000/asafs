@@ -1,11 +1,81 @@
 import React, { useState } from 'react';
 import Footer from '@/components/ui/Footer';
-import { Heart, ShieldCheck, Globe, Users, CreditCard, ChevronRight } from 'lucide-react';
+import { Heart, ShieldCheck, Globe, Users, CreditCard, ChevronRight, Loader2 } from 'lucide-react';
+import api from '@/services/api';
+import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
+
+import { useTheme } from '@/lib/ThemeContext';
 
 export default function Donate() {
+  const { t } = useTranslation();
+  const { theme } = useTheme();
+  const [currency, setCurrency] = useState<'USD' | 'CDF'>('USD');
   const [amount, setAmount] = useState<number | string>(25);
-  const [method, setMethod] = useState<'mpesa' | 'orange' | 'airtel' | 'card'>('mpesa');
+  const [method, setMethod] = useState<'mpesa' | 'orange' | 'airtel' | 'maishapay' | 'stripe' | 'bank'>('mpesa');
   const [phone, setPhone] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  // Predefined amounts based on currency
+  const predefinedAmounts = currency === 'USD' 
+    ? [10, 25, 50, 100, 250, 500]
+    : [10000, 25000, 50000, 100000, 250000, 500000];
+
+  const [personalInfo, setPersonalInfo] = useState({
+    firstName: '',
+    lastName: '',
+    email: ''
+  });
+
+  // Handle currency change and reset amount to default for that currency
+  const handleCurrencyChange = (newCurrency: 'USD' | 'CDF') => {
+    setCurrency(newCurrency);
+    setAmount(newCurrency === 'USD' ? 25 : 50000);
+  };
+
+  const handleDonate = async () => {
+    if (!amount || Number(amount) <= 0) {
+      return toast.error("Veuillez entrer un montant valide");
+    }
+    if (!personalInfo.email || !personalInfo.firstName) {
+      return toast.error("Veuillez remplir vos informations personnelles");
+    }
+    if (['mpesa', 'orange', 'airtel', 'maishapay'].includes(method) && !phone) {
+      return toast.error("Le numéro de téléphone est requis pour ce mode de paiement");
+    }
+
+    setLoading(true);
+    try {
+      const { data } = await api.post('/payments/initiate', {
+        amount,
+        currency,
+        method,
+        phone,
+        personalInfo
+      });
+
+      if (data.url) {
+        window.location.href = data.url; // Stripe redirect
+      } else if (data.data && data.data.payment_url) {
+        window.location.href = data.data.payment_url; // Maisha Pay redirect
+      } else {
+        toast.success("Demande de paiement envoyée. Veuillez vérifier votre téléphone.");
+      }
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Erreur lors de l'initiation du paiement");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getLogo = (id: string, theme: string) => {
+    if (id === 'mpesa') return theme === 'dark' ? '/logos/mpesa_dark.png' : '/logos/mpesa_light.png';
+    if (id === 'orange') return theme === 'dark' ? '/logos/orange_dark.png' : '/logos/orange_light.png';
+    if (id === 'airtel') return theme === 'dark' ? '/logos/airtel_dark.png' : '/logos/airtel_light.png';
+    if (id === 'maishapay') return '/logos/maishapay.png';
+    if (id === 'stripe') return '/logos/stripe.png';
+    return 'https://cdn-icons-png.flaticon.com/512/2830/2830284.png';
+  };
 
   return (
     <div className="bg-white dark:bg-slate-950 min-h-screen transition-colors duration-300">
@@ -20,14 +90,13 @@ export default function Donate() {
         
         <div className="relative z-10 text-center px-4 max-w-4xl">
           <div className="inline-block px-3 py-1 bg-yellow-400/20 backdrop-blur-md border border-yellow-400/30 rounded-full text-yellow-400 text-[10px] font-black tracking-widest uppercase mb-4">
-            Soutien Direct
+            {t('donate.badge')}
           </div>
-          <h1 className="text-3xl md:text-5xl font-black text-white mb-4 tracking-tighter uppercase">
-            ENSEMBLE, CHANGEONS <br />
-            <span className="text-yellow-400 italic">DES VIES</span>
+          <h1 className="text-3xl md:text-5xl font-black text-white mb-4 tracking-tighter uppercase whitespace-pre-line">
+            {t('donate.hero_title')}
           </h1>
           <p className="text-sm md:text-base text-gray-200 font-medium max-w-xl mx-auto leading-relaxed">
-            Votre don finance l'éducation et l'autonomisation des femmes sourdes en RDC.
+            {t('donate.hero_subtitle')}
           </p>
         </div>
       </section>
@@ -42,25 +111,44 @@ export default function Donate() {
                 <Heart className="w-6 h-6 fill-current" />
               </div>
               <div>
-                <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight uppercase">Contribuez</h2>
-                <p className="text-slate-400 text-[11px] font-black uppercase tracking-widest italic">Impact Solidaire</p>
+                <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight uppercase">{t('donate.title')}</h2>
+                <p className="text-slate-400 text-[11px] font-black uppercase tracking-widest italic">{t('donate.badge')}</p>
               </div>
             </div>
 
             <div className="space-y-6">
+              {/* Currency Selector */}
+              <div className="flex justify-center mb-6">
+                <div className="bg-slate-100 dark:bg-slate-800 p-1 rounded-2xl flex gap-1">
+                  {(['USD', 'CDF'] as const).map((cur) => (
+                    <button
+                      key={cur}
+                      onClick={() => handleCurrencyChange(cur)}
+                      className={`px-8 py-2 rounded-xl text-xs font-black transition-all ${
+                        currency === cur 
+                        ? 'bg-white dark:bg-slate-950 text-blue-600 shadow-sm' 
+                        : 'text-slate-400 hover:text-slate-600'
+                      }`}
+                    >
+                      {cur === 'USD' ? 'USD ($)' : 'CDF (FC)'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               {/* Amount Selection */}
               <div className="grid grid-cols-3 gap-3">
-                {[10, 25, 50, 100, 250, 500].map((val) => (
+                {predefinedAmounts.map((val) => (
                   <button
                     key={val}
                     onClick={() => setAmount(val)}
-                    className={`py-3 px-2 rounded-xl font-black text-base transition-all duration-300 border-2 ${
+                    className={`py-3 px-2 rounded-xl font-black text-sm transition-all duration-300 border-2 ${
                       amount === val 
                       ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-600/20 scale-105' 
                       : 'bg-slate-50 dark:bg-slate-800 border-slate-50 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-blue-200'
                     }`}
                   >
-                    {val}$
+                    {val.toLocaleString()} {currency === 'USD' ? '$' : 'FC'}
                   </button>
                 ))}
               </div>
@@ -73,42 +161,74 @@ export default function Donate() {
                   onChange={(e) => setAmount(e.target.value)}
                   className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border-2 border-slate-50 dark:border-slate-800 rounded-2xl text-lg font-bold text-slate-900 dark:text-white focus:outline-none focus:border-blue-600 transition-all placeholder:text-slate-300"
                 />
-                <span className="absolute right-6 top-1/2 -translate-y-1/2 text-xl font-black text-slate-300 group-focus-within:text-blue-600">$</span>
+                <span className="absolute right-6 top-1/2 -translate-y-1/2 text-xl font-black text-slate-300 group-focus-within:text-blue-600">
+                  {currency === 'USD' ? '$' : 'FC'}
+                </span>
               </div>
 
-              {/* Payment Methods */}
+               {/* Payment Methods */}
               <div className="space-y-3">
-                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Mode de Paiement</p>
-                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{t('donate.method_title')}</p>
+                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     {[
-                      { id: 'mpesa', name: 'M-Pesa', logo: '/logos/mpesa.png' },
-                      { id: 'orange', name: 'Orange', logo: '/logos/orange.png' },
-                      { id: 'airtel', name: 'Airtel', logo: '/logos/airtel.png' },
-                      { id: 'card', name: 'Carte', logo: 'https://cdn-icons-png.flaticon.com/512/179/179457.png' }
+                      { id: 'mpesa', name: 'M-Pesa' },
+                      { id: 'orange', name: 'Orange' },
+                      { id: 'airtel', name: 'Airtel' },
+                      { id: 'maishapay', name: 'Maisha Pay' },
+                      { id: 'stripe', name: 'Carte / Stripe' },
+                      { id: 'bank', name: 'Virement' }
                     ].map((p) => (
                       <button
                         key={p.id}
                         onClick={() => setMethod(p.id as any)}
-                        className={`flex flex-col items-center justify-center p-3 rounded-2xl border-2 transition-all relative overflow-hidden ${
+                        className={`flex flex-col items-center justify-center p-3 rounded-2xl border-2 transition-all relative overflow-hidden h-24 ${
                           method === p.id 
                           ? 'bg-blue-600/5 border-blue-600 shadow-sm' 
                           : 'bg-slate-50 dark:bg-slate-800 border-slate-50 dark:border-slate-800 hover:border-blue-200'
                         }`}
                       >
-                        <img src={p.logo} alt={p.name} className="h-8 w-auto object-contain mb-1 rounded-sm grayscale group-hover:grayscale-0" />
-                        <span className={`text-[9px] font-black uppercase tracking-tighter ${method === p.id ? 'text-blue-600' : 'text-slate-400'}`}>
+                        <img src={getLogo(p.id, theme)} alt={p.name} className="h-10 w-auto object-contain mb-1 rounded-sm" />
+                        <span className={`text-[9px] font-black uppercase tracking-tighter text-center ${method === p.id ? 'text-blue-600' : 'text-slate-400'}`}>
                           {p.name}
                         </span>
-                        {method === p.id && <div className="absolute top-1 right-1 w-2 h-2 bg-blue-600 rounded-full" />}
+                        {method === p.id && <div className="absolute top-2 right-2 w-2 h-2 bg-blue-600 rounded-full" />}
                       </button>
                     ))}
                  </div>
               </div>
 
+              {/* Personal Info */}
+              <div className="space-y-4">
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{t('donate.info_title')}</p>
+                <div className="grid grid-cols-2 gap-3">
+                  <input
+                    type="text"
+                    placeholder={t('contact.name')}
+                    value={personalInfo.firstName}
+                    onChange={(e) => setPersonalInfo({...personalInfo, firstName: e.target.value})}
+                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border-2 border-slate-50 dark:border-slate-800 rounded-xl text-sm font-bold text-slate-900 dark:text-white focus:outline-none focus:border-blue-600 transition-all"
+                  />
+                  <input
+                    type="text"
+                    placeholder={t('contact.name')}
+                    value={personalInfo.lastName}
+                    onChange={(e) => setPersonalInfo({...personalInfo, lastName: e.target.value})}
+                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border-2 border-slate-50 dark:border-slate-800 rounded-xl text-sm font-bold text-slate-900 dark:text-white focus:outline-none focus:border-blue-600 transition-all"
+                  />
+                </div>
+                <input
+                  type="email"
+                  placeholder={t('contact.email')}
+                  value={personalInfo.email}
+                  onChange={(e) => setPersonalInfo({...personalInfo, email: e.target.value})}
+                  className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border-2 border-slate-50 dark:border-slate-800 rounded-xl text-sm font-bold text-slate-900 dark:text-white focus:outline-none focus:border-blue-600 transition-all"
+                />
+              </div>
+
               {/* Phone Number Field (Only for Mobile Money) */}
-              {method !== 'card' && (
+              {(method === 'mpesa' || method === 'orange' || method === 'airtel' || method === 'maishapay') && (
                 <div className="animate-in fade-in slide-in-from-top-2 duration-300">
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 mb-2">Numéro de Téléphone</p>
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 mb-2">{t('donate.phone_title')}</p>
                   <input
                     type="tel"
                     placeholder="081 000 0000"
@@ -120,15 +240,19 @@ export default function Donate() {
               )}
 
               <div className="space-y-4 pt-4">
-                <button className="w-full flex items-center justify-between px-6 py-5 bg-slate-950 dark:bg-blue-600 text-white rounded-2xl font-black text-lg hover:bg-slate-800 dark:hover:bg-blue-700 transition-all group">
+                <button 
+                  onClick={handleDonate}
+                  disabled={loading}
+                  className="w-full flex items-center justify-between px-6 py-5 bg-slate-950 dark:bg-blue-600 text-white rounded-2xl font-black text-lg hover:bg-slate-800 dark:hover:bg-blue-700 transition-all group disabled:opacity-50 disabled:cursor-not-allowed"
+                >
                   <div className="flex items-center gap-3">
-                    <CreditCard className="w-5 h-5" />
-                    PROCÉDER AU DON
+                    {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <CreditCard className="w-5 h-5" />}
+                    {loading ? t('donate.processing') : t('donate.proceed')}
                   </div>
-                  <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  {!loading && <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />}
                 </button>
                 <p className="text-center text-slate-400 text-[10px] font-black uppercase tracking-widest italic">
-                   Sécurité garantie via cryptage SSL 256 bits
+                   {t('donate.security')}
                 </p>
               </div>
             </div>

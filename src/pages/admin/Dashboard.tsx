@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from "sonner";
 import { usePosts, useCreatePost, useUpdatePost, useDeletePost, Post, ContentType } from '@/hooks/usePosts';
-import { useContent } from '@/lib/ContentContext'; // Keeping for currentUser only for now
+import { useContent } from '@/lib/ContentContext';
+import { useTranslation } from 'react-i18next';
 import {
     Card,
     CardContent,
@@ -19,10 +20,18 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Loader2, Plus, Pencil, Trash2, LayoutDashboard, FileText, Calendar, Image as ImageIcon, LogOut, Settings } from 'lucide-react';
+import { Loader2, Plus, Pencil, Trash2, LayoutDashboard, FileText, Calendar, Image as ImageIcon, LogOut, Settings, Mail, Bell, Users, CheckCircle, Eye } from 'lucide-react';
 import { cn } from "@/lib/utils";
+import { useContacts, useNewsletterSubs, useMarkContactRead, useDeleteContact } from '@/hooks/useAdminData';
 import { StatsCard } from '@/components/dashboard/StatsCard';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -31,6 +40,7 @@ import { Textarea } from '@/components/ui/textarea';
 const Dashboard = () => {
     const navigate = useNavigate();
     const { currentUser, setCurrentUser } = useContent();
+    const { t } = useTranslation();
     
     // React Query Hooks
     // Fetch all for now, or fetch by active tab?
@@ -41,9 +51,17 @@ const Dashboard = () => {
     // Actually, dashboard needs stats from ALL types.
     
     const { data: allPosts, isLoading } = usePosts();
+    const { data: allContacts, isLoading: isLoadingContacts } = useContacts();
+    const { data: allSubs, isLoading: isLoadingSubs } = useNewsletterSubs();
+    
+    const markContactReadMutation = useMarkContactRead();
+    const deleteContactMutation = useDeleteContact();
+
     const createPostMutation = useCreatePost();
     const updatePostMutation = useUpdatePost();
     const deletePostMutation = useDeletePost();
+    
+    if (!currentUser) return null;
     
     const posts = allPosts || [];
     const getPostsByType = (type: string) => posts.filter(p => p.type === type);
@@ -57,7 +75,7 @@ const Dashboard = () => {
         }
     }, [currentUser, navigate]);
 
-    const [activeTab, setActiveTab] = useState<'dashboard' | 'about' | 'programme' | 'evenement' | 'carousel' | 'activite' | 'settings'>('dashboard');
+    const [activeTab, setActiveTab] = useState<'dashboard' | 'about' | 'programme' | 'evenement' | 'carousel' | 'activite' | 'contacts' | 'newsletter' | 'settings'>('dashboard');
     const [isEditing, setIsEditing] = useState(false);
     const [editingPost, setEditingPost] = useState<Post | null>(null);
     const [previewMode, setPreviewMode] = useState(false);
@@ -452,43 +470,61 @@ const Dashboard = () => {
                 </div>
 
                 <nav className="mt-4 flex-1 px-4 space-y-2">
+                    <div className="text-gray-500 text-xs font-bold uppercase tracking-wider mb-2 ml-2">{t('admin.dashboard')}</div>
                     <button
                         onClick={() => { setActiveTab('dashboard'); setIsEditing(false); }}
-                        className={`w-full text-left py-3 px-4 rounded-lg transition-all ${activeTab === 'dashboard' ? 'bg-blue-600 text-white shadow-lg' : 'text-gray-300 hover:bg-gray-800'}`}
+                        className={`w-full text-left py-2 px-4 rounded-lg transition-all ${activeTab === 'dashboard' ? 'bg-gray-800 text-white border-l-4 border-blue-500' : 'text-gray-300 hover:bg-gray-800'}`}
                     >
-                        📊 Tableau de bord
+                        🏠 {t('admin.dashboard')}
                     </button>
 
-                    <div className="text-gray-500 text-xs font-bold uppercase tracking-wider mt-6 mb-2 ml-2">Gestion Contenu</div>
+                    <div className="text-gray-500 text-xs font-bold uppercase tracking-wider mt-6 mb-2 ml-2">Content Management</div>
                     <button
                         onClick={() => { setActiveTab('about'); setIsEditing(false); }}
                         className={`w-full text-left py-2 px-4 rounded-lg transition-all ${activeTab === 'about' ? 'bg-gray-800 text-white border-l-4 border-blue-500' : 'text-gray-300 hover:bg-gray-800'}`}
                     >
-                        ℹ️ À Propos
+                        ℹ️ {t('admin.news')}
                     </button>
                     <button
                         onClick={() => { setActiveTab('programme'); setIsEditing(false); }}
                         className={`w-full text-left py-2 px-4 rounded-lg transition-all ${activeTab === 'programme' ? 'bg-gray-800 text-white border-l-4 border-blue-500' : 'text-gray-300 hover:bg-gray-800'}`}
                     >
-                        📚 Programmes
+                        📚 {t('admin.programs')}
                     </button>
                     <button
                         onClick={() => { setActiveTab('evenement'); setIsEditing(false); }}
                         className={`w-full text-left py-2 px-4 rounded-lg transition-all ${activeTab === 'evenement' ? 'bg-gray-800 text-white border-l-4 border-blue-500' : 'text-gray-300 hover:bg-gray-800'}`}
                     >
-                        🎯 Événements
+                        🎯 {t('admin.events')}
                     </button>
                     <button
                         onClick={() => { setActiveTab('carousel'); setIsEditing(false); }}
                         className={`w-full text-left py-2 px-4 rounded-lg transition-all ${activeTab === 'carousel' ? 'bg-gray-800 text-white border-l-4 border-blue-500' : 'text-gray-300 hover:bg-gray-800'}`}
                     >
-                        🖼️ Carousel
+                        🖼️ {t('admin.carousel')}
                     </button>
                     <button
                         onClick={() => { setActiveTab('activite'); setIsEditing(false); }}
                         className={`w-full text-left py-2 px-4 rounded-lg transition-all ${activeTab === 'activite' ? 'bg-gray-800 text-white border-l-4 border-blue-500' : 'text-gray-300 hover:bg-gray-800'}`}
                     >
-                        📋 Activités
+                        📋 {t('admin.activities')}
+                    </button>
+
+                    <div className="text-gray-500 text-xs font-bold uppercase tracking-wider mt-6 mb-2 ml-2">Communication</div>
+                    <button
+                        onClick={() => { setActiveTab('contacts'); setIsEditing(false); }}
+                        className={`w-full text-left py-2 px-4 rounded-lg transition-all ${activeTab === 'contacts' ? 'bg-gray-800 text-white border-l-4 border-blue-500' : 'text-gray-300 hover:bg-gray-800'}`}
+                    >
+                        📧 {t('admin.contacts')}
+                        {allContacts?.filter(c => !c.isRead).length ? (
+                            <Badge className="ml-2 bg-blue-500">{allContacts.filter(c => !c.isRead).length}</Badge>
+                        ) : null}
+                    </button>
+                    <button
+                        onClick={() => { setActiveTab('newsletter'); setIsEditing(false); }}
+                        className={`w-full text-left py-2 px-4 rounded-lg transition-all ${activeTab === 'newsletter' ? 'bg-gray-800 text-white border-l-4 border-blue-500' : 'text-gray-300 hover:bg-gray-800'}`}
+                    >
+                        ✉️ {t('admin.newsletter')}
                     </button>
 
                     <div className="text-gray-500 text-xs font-bold uppercase tracking-wider mt-6 mb-2 ml-2">Compte</div>
@@ -514,10 +550,8 @@ const Dashboard = () => {
                         onClick={handleLogout}
                         className="flex items-center gap-2 text-red-400 hover:text-red-300 transition-colors text-sm font-medium w-full p-2 rounded hover:bg-gray-800"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                            <path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd" />
-                        </svg>
-                        Déconnexion
+                        <LogOut className="h-5 w-5" />
+                        {t('admin.logout')}
                     </button>
                 </div>
             </aside>
@@ -528,14 +562,28 @@ const Dashboard = () => {
                     <div className="px-8 py-6 flex justify-between items-center">
                         <div>
                             <h2 className="text-3xl font-bold text-gray-800">
-                                {activeTab === 'dashboard' && '📊 Vue d\'ensemble'}
-                                {activeTab === 'about' && 'ℹ️ Gestion: À Propos'}
-                                {activeTab === 'programme' && '📚 Gestion: Programmes'}
-                                {activeTab === 'evenement' && '🎯 Gestion: Événements'}
-                                {activeTab === 'carousel' && '🖼️ Gestion: Carousel'}
-                                {activeTab === 'settings' && '⚙️ Profil & Paramètres'}
+                                {activeTab === 'dashboard' && `📊 ${t('admin.dashboard')}`}
+                                {activeTab === 'about' && `ℹ️ ${t('admin.news')}`}
+                                {activeTab === 'programme' && `📚 ${t('admin.programs')}`}
+                                {activeTab === 'evenement' && `🎯 ${t('admin.events')}`}
+                                {activeTab === 'carousel' && `🖼️ ${t('admin.carousel')}`}
+                                {activeTab === 'contacts' && `📧 ${t('admin.contacts')}`}
+                                {activeTab === 'newsletter' && `✉️ ${t('admin.newsletter')}`}
+                                {activeTab === 'settings' && `⚙️ Profil & Paramètres`}
                             </h2>
-                            <p className="text-gray-500 mt-1">Bienvenue {currentUser.name}!</p>
+                            <p className="text-gray-500 mt-1">{t('admin.welcome')} {currentUser.name}!</p>
+                        </div>
+                        <div className="flex items-center gap-4">
+                             <div className="flex -space-x-2">
+                                 {allContacts?.filter(c => !c.isRead).slice(0, 3).map(c => (
+                                     <div key={c.id} title={c.name} className="w-8 h-8 rounded-full border-2 border-white bg-blue-100 flex items-center justify-center text-[10px] font-bold text-blue-600 uppercase">
+                                         {c.name.charAt(0)}
+                                     </div>
+                                 ))}
+                             </div>
+                             {allContacts?.some(c => !c.isRead) && (
+                                 <div className="bg-red-500 w-2 h-2 rounded-full absolute -top-1 -right-1 animate-pulse" />
+                             )}
                         </div>
                     </div>
                 </header>
@@ -544,12 +592,14 @@ const Dashboard = () => {
                     <div className="max-w-6xl mx-auto">
                         {activeTab === 'dashboard' && (
                             <div className="space-y-8">
-                                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
-                                    <StatsCard title="Programmes" value={getStats('programme')} icon={FileText} color="blue" />
-                                    <StatsCard title="Événements" value={getStats('evenement')} icon={Calendar} color="purple" />
-                                    <StatsCard title="Activités" value={getStats('activite')} icon={LayoutDashboard} color="indigo" />
-                                    <StatsCard title="Carousel" value={getStats('carousel')} icon={ImageIcon} color="orange" />
-                                    <StatsCard title="Contenu À Propos" value={getStats('about')} icon={Calendar} color="green" />
+                                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                                    <StatsCard title={t('admin.programs')} value={getStats('programme')} icon={FileText} color="blue" />
+                                    <StatsCard title={t('admin.events')} value={getStats('evenement')} icon={Calendar} color="purple" />
+                                    <StatsCard title={t('admin.activities')} value={getStats('activite')} icon={LayoutDashboard} color="indigo" />
+                                    <StatsCard title={t('admin.carousel')} value={getStats('carousel')} icon={ImageIcon} color="orange" />
+                                    <StatsCard title={t('admin.news')} value={getStats('about')} icon={Calendar} color="green" />
+                                    <StatsCard title={t('admin.contacts')} value={allContacts?.length || 0} icon={Mail} color="pink" />
+                                    <StatsCard title={t('admin.newsletter')} value={allSubs?.length || 0} icon={Bell} color="yellow" />
                                 </div>
 
                                 <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
@@ -583,6 +633,122 @@ const Dashboard = () => {
                         {(activeTab === 'about' || activeTab === 'programme' || activeTab === 'evenement' || activeTab === 'carousel' || activeTab === 'activite') && (
                             <div>
                                 {isEditing ? renderEditor() : renderPostList(activeTab)}
+                            </div>
+                        )}
+
+                        {activeTab === 'contacts' && (
+                            <div className="space-y-6">
+                                <Card>
+                                    <CardHeader>
+                                        <CardTitle className="text-xl font-bold flex items-center gap-2">
+                                            <Mail className="w-5 h-5 text-blue-600" />
+                                            Messages de contact ({allContacts?.length || 0})
+                                        </CardTitle>
+                                        <CardDescription>Consultez et gérez les messages envoyés depuis le site web.</CardDescription>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <Table>
+                                            <TableHeader>
+                                                <TableRow>
+                                                    <TableHead className="w-[200px]">Expéditeur</TableHead>
+                                                    <TableHead>Sujet</TableHead>
+                                                    <TableHead>Message</TableHead>
+                                                    <TableHead>Date</TableHead>
+                                                    <TableHead className="text-right">Actions</TableHead>
+                                                </TableRow>
+                                            </TableHeader>
+                                            <TableBody>
+                                                {allContacts?.length === 0 ? (
+                                                    <TableRow>
+                                                        <TableCell colSpan={5} className="text-center py-8 text-slate-500">Aucun message reçu.</TableCell>
+                                                    </TableRow>
+                                                ) : (
+                                                    allContacts?.map((msg) => (
+                                                        <TableRow key={msg.id} className={msg.isRead ? 'opacity-60' : 'bg-blue-50/30'}>
+                                                            <TableCell>
+                                                                <div className="font-bold">{msg.name}</div>
+                                                                <div className="text-xs text-slate-500">{msg.email}</div>
+                                                            </TableCell>
+                                                            <TableCell className="font-semibold">{msg.subject}</TableCell>
+                                                            <TableCell className="max-w-xs truncate">{msg.message}</TableCell>
+                                                            <TableCell className="text-xs text-slate-500">{new Date(msg.createdAt).toLocaleDateString()}</TableCell>
+                                                            <TableCell className="text-right flex items-center justify-end gap-2">
+                                                                {!msg.isRead && (
+                                                                    <Button variant="ghost" size="icon" onClick={() => markContactReadMutation.mutate(msg.id)} title="Marquer comme lu">
+                                                                        <CheckCircle className="w-4 h-4 text-green-600" />
+                                                                    </Button>
+                                                                )}
+                                                                <Dialog>
+                                                                    <DialogTrigger asChild>
+                                                                        <Button variant="ghost" size="icon" title="Voir le message">
+                                                                            <Eye className="w-4 h-4 text-blue-600" />
+                                                                        </Button>
+                                                                    </DialogTrigger>
+                                                                    <DialogContent>
+                                                                        <DialogHeader>
+                                                                            <DialogTitle>{msg.subject}</DialogTitle>
+                                                                            <div className="text-sm text-slate-500">De: {msg.name} ({msg.email})</div>
+                                                                        </DialogHeader>
+                                                                        <div className="mt-4 p-4 bg-slate-50 rounded-lg text-slate-700 whitespace-pre-wrap">
+                                                                            {msg.message}
+                                                                        </div>
+                                                                    </DialogContent>
+                                                                </Dialog>
+                                                                <Button variant="ghost" size="icon" onClick={() => { if(confirm('Supprimer ce message?')) deleteContactMutation.mutate(msg.id) }} title="Supprimer">
+                                                                    <Trash2 className="w-4 h-4 text-red-600" />
+                                                                </Button>
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    ))
+                                                )}
+                                            </TableBody>
+                                        </Table>
+                                    </CardContent>
+                                </Card>
+                            </div>
+                        )}
+
+                        {activeTab === 'newsletter' && (
+                            <div className="space-y-6">
+                                <Card>
+                                    <CardHeader>
+                                        <CardTitle className="text-xl font-bold flex items-center gap-2">
+                                            <Bell className="w-5 h-5 text-blue-600" />
+                                            Abonnés Newsletter ({allSubs?.length || 0})
+                                        </CardTitle>
+                                        <CardDescription>Liste des adresses emails inscrites à la newsletter.</CardDescription>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <Table>
+                                            <TableHeader>
+                                                <TableRow>
+                                                    <TableHead>Email</TableHead>
+                                                    <TableHead>Statut</TableHead>
+                                                    <TableHead>Date d'inscription</TableHead>
+                                                </TableRow>
+                                            </TableHeader>
+                                            <TableBody>
+                                                {allSubs?.length === 0 ? (
+                                                    <TableRow>
+                                                        <TableCell colSpan={3} className="text-center py-8 text-slate-500">Aucun abonné pour le moment.</TableCell>
+                                                    </TableRow>
+                                                ) : (
+                                                    allSubs?.map((sub) => (
+                                                        <TableRow key={sub.id}>
+                                                            <TableCell className="font-medium">{sub.email}</TableCell>
+                                                            <TableCell>
+                                                                <Badge variant={sub.active ? 'default' : 'secondary'} className={sub.active ? 'bg-green-500 hover:bg-green-600' : ''}>
+                                                                    {sub.active ? 'Actif' : 'Désabonné'}
+                                                                </Badge>
+                                                            </TableCell>
+                                                            <TableCell className="text-xs text-slate-500">{new Date(sub.createdAt).toLocaleDateString()}</TableCell>
+                                                        </TableRow>
+                                                    ))
+                                                )}
+                                            </TableBody>
+                                        </Table>
+                                    </CardContent>
+                                </Card>
                             </div>
                         )}
 

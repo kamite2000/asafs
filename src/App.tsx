@@ -15,6 +15,8 @@ import Contact from './pages/contact';
 import About from './pages/about';
 import Newsletter from './pages/newsletter';
 import Don from './pages/don';
+import Success from './pages/Success';
+import Dictionary from './pages/Dictionary';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import ForgotPassword from './pages/auth/ForgotPassword';
@@ -79,6 +81,8 @@ function App() {
                 <Route path="about" element={<About />} />
                 <Route path="newsletter" element={<Newsletter />} />
                 <Route path="don" element={<Don />} />
+                <Route path="success" element={<Success />} />
+                <Route path="dictionnaire" element={<Dictionary />} />
               </Route>
 
               {/* Fallback - Redirect to Home */}

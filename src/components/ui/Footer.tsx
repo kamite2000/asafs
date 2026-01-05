@@ -1,8 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Facebook, Twitter, Instagram, Linkedin, MapPin, Mail, Phone, Heart } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Footer: React.FC = () => {
+  const { t } = useTranslation();
+
   return (
     <footer className="bg-slate-950 text-white pt-12 pb-6 overflow-hidden border-t border-white/5">
       <div className="max-w-7xl mx-auto px-6">
@@ -23,7 +26,7 @@ const Footer: React.FC = () => {
               </div>
             </Link>
             <p className="text-slate-500 text-[11px] leading-relaxed max-w-xs font-medium">
-              Autonomisation des femmes sourdes en RDC par l'éducation et la formation.
+              {t('footer.tagline')}
             </p>
             <div className="flex gap-2">
               {[Facebook, Twitter, Instagram, Linkedin].map((Icon, i) => (
@@ -37,16 +40,17 @@ const Footer: React.FC = () => {
           {/* Quick Links */}
           <div>
             <h4 className="text-[11px] font-black mb-4 flex items-center gap-2 uppercase tracking-widest text-slate-400">
-              <span className="w-1.5 h-1.5 bg-blue-500 rounded-full" shrink-0 />
-              Navigation
+              <span className="w-1.5 h-1.5 bg-blue-500 rounded-full shrink-0" />
+              {t('footer.nav_title')}
             </h4>
             <nav className="flex flex-col gap-2">
               {[
-                { name: 'Home', path: '/' },
-                { name: 'À propos', path: '/about' },
-                { name: 'Programmes', path: '/programmes' },
-                { name: 'Événements', path: '/evenement' },
-                { name: 'Contact', path: '/contact' }
+                { name: t('nav.home'), path: '/' },
+                { name: t('nav.about'), path: '/about' },
+                { name: t('nav.programs'), path: '/programmes' },
+                { name: t('nav.events'), path: '/evenement' },
+                { name: t('nav.dictionary'), path: '/dictionnaire' },
+                { name: t('nav.contact'), path: '/contact' }
               ].map((link) => (
                 <Link key={link.path} to={link.path} className="text-slate-600 hover:text-white hover:translate-x-1 transition-all duration-300 text-[11px] font-black uppercase tracking-widest">
                   {link.name}
@@ -58,8 +62,8 @@ const Footer: React.FC = () => {
           {/* Support Section */}
           <div>
             <h4 className="text-[11px] font-black mb-4 flex items-center gap-2 uppercase tracking-widest text-slate-400">
-              <span className="w-1.5 h-1.5 bg-yellow-400 rounded-full" shrink-0 />
-              Soutenir
+              <span className="w-1.5 h-1.5 bg-yellow-400 rounded-full shrink-0" />
+              {t('footer.support_title')}
             </h4>
             <div className="space-y-3">
               <Link
@@ -67,10 +71,10 @@ const Footer: React.FC = () => {
                 className="flex items-center justify-center gap-2 w-full py-2.5 bg-[#F4D227] text-slate-950 text-[10px] font-black rounded-lg hover:bg-[#ffe045] transition-all uppercase tracking-widest"
               >
                 <Heart className="w-3.5 h-3.5 fill-current" />
-                DONNER
+                {t('nav.donate')}
               </Link>
             <div className="p-3 bg-white/5 rounded-xl border border-white/5">
-                <h5 className="text-[9px] font-black mb-2 uppercase tracking-widest italic text-blue-500/80">Newsletter</h5>
+                <h5 className="text-[9px] font-black mb-2 uppercase tracking-widest italic text-blue-500/80">{t('footer.newsletter_title')}</h5>
                 <form 
                   onSubmit={async (e) => {
                     e.preventDefault();
@@ -85,11 +89,11 @@ const Footer: React.FC = () => {
                       const { toast } = await import('sonner');
                       
                       await api.post('/newsletter/subscribe', { email });
-                      toast.success("Inscription réussie !");
+                      toast.success(t('footer.success_subscribe'));
                       e.currentTarget.reset();
                     } catch (error) {
                       const { toast } = await import('sonner');
-                      toast.error("Erreur lors de l'inscription");
+                      toast.error(t('footer.error_subscribe'));
                     } finally {
                       const btn = e.currentTarget.querySelector('button');
                       if (btn) btn.disabled = false;
@@ -101,11 +105,11 @@ const Footer: React.FC = () => {
                     name="email"
                     type="email"
                     required
-                    placeholder="Email"
+                    placeholder={t('footer.placeholder_email')}
                     className="w-full px-2 py-1.5 bg-white/5 border border-white/10 rounded-md text-[12px] focus:outline-none focus:border-blue-500/50 transition-colors"
                   />
                   <button type="submit" className="w-full py-1.5 bg-blue-600/80 text-white text-[9px] font-black uppercase tracking-widest rounded-md hover:bg-blue-600 transition-colors disabled:opacity-50">
-                    S'abonner
+                    {t('footer.subscribe')}
                   </button>
                 </form>
               </div>
@@ -115,8 +119,8 @@ const Footer: React.FC = () => {
           {/* Contact Info */}
           <div>
             <h4 className="text-[11px] font-black mb-4 flex items-center gap-2 uppercase tracking-widest text-slate-400">
-              <span className="w-1.5 h-1.5 bg-indigo-400 rounded-full" shrink-0 />
-              Contact
+              <span className="w-1.5 h-1.5 bg-indigo-400 rounded-full shrink-0" />
+              {t('nav.contact')}
             </h4>
             <div className="space-y-2">
               <div className="flex gap-2 p-2.5 bg-white/5 rounded-lg border border-white/5">
@@ -143,7 +147,7 @@ const Footer: React.FC = () => {
             © {new Date().getFullYear()} ASAFS.
           </p>
           <div className="flex items-center gap-1 text-[9px] text-slate-700 font-bold uppercase tracking-widest">
-            Propulsé par 
+            {t('footer.powered_by')} 
             <a href="https://aumsoft.net" className="text-slate-600 hover:text-blue-500 transition-colors">
               Aumsoft.net
             </a>
