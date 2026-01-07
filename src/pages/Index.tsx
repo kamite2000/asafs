@@ -14,8 +14,13 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { useContent } from "@/lib/ContentContext";
-import { BookOpen, Video, FileText, ChevronRight, Play, Target, Shield, Salad, Scale, HeartHandshake, ExternalLink } from "lucide-react";
+import { BookOpen, Video, FileText, ChevronRight, Play, Target, Shield, Salad, Scale, HeartHandshake, ExternalLink, Users, GraduationCap, Globe, AlertCircle, Calendar, ArrowRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const Index = () => {
   const { t } = useTranslation();
@@ -23,6 +28,11 @@ const Index = () => {
   const carouselPosts = getPublishedPostsByType('carousel');
   const eventPosts = getPublishedPostsByType('evenement').slice(0, 2);
   const programmePosts = getPublishedPostsByType('programme').slice(0, 3);
+  const partnerPosts = getPublishedPostsByType('partenaire');
+  const newsPosts = getPublishedPostsByType('about');
+  const [showAllNews, setShowAllNews] = React.useState(false);
+
+  const displayedNews = showAllNews ? newsPosts : newsPosts.slice(0, 3);
 
   return (
     <div className="flex overflow-hidden flex-col bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300">
@@ -56,8 +66,8 @@ const Index = () => {
             <Link to="/about" className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg shadow-lg shadow-blue-900/40 transition-all hover:scale-105 active:scale-95 text-center">
               {t('hero.btn_history')}
             </Link>
-            <Link to="/contact" className="px-8 py-3 bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition-all text-center">
-              {t('hero.btn_contact')}
+            <Link to="/don" className="px-8 py-3 bg-white/10 backdrop-blur-md border border-yellow-400 dark:border-yellow-400 hover:bg-white/20 hover:border-yellow-300 text-white text-sm font-bold rounded-lg transition-all text-center">
+              {t('nav.donate')}
             </Link>
           </div>
         </div>
@@ -167,6 +177,26 @@ const Index = () => {
                 icon: <HeartHandshake className="w-5 h-5 text-blue-600" />,
                 title: t('objectives.obj5_title'),
                 content: t('objectives.obj5_desc')
+              },
+              {
+                icon: <Users className="w-5 h-5 text-blue-600" />,
+                title: t('objectives.obj6_title'),
+                content: t('objectives.obj6_desc')
+              },
+              {
+                icon: <GraduationCap className="w-5 h-5 text-blue-600" />,
+                title: t('objectives.obj7_title'),
+                content: t('objectives.obj7_desc')
+              },
+              {
+                icon: <Globe className="w-5 h-5 text-blue-600" />,
+                title: t('objectives.obj8_title'),
+                content: t('objectives.obj8_desc')
+              },
+              {
+                icon: <AlertCircle className="w-5 h-5 text-blue-600" />,
+                title: t('objectives.obj9_title'),
+                content: t('objectives.obj9_desc')
               }
             ].map((obj, i) => (
               <div key={i} className="group relative bg-slate-50 dark:bg-slate-900 p-7 rounded-2xl border border-slate-100 dark:border-slate-800 hover:bg-white dark:hover:bg-slate-800 hover:shadow-xl hover:border-blue-100 transition-all duration-300 flex flex-col h-full">
@@ -367,6 +397,147 @@ const Index = () => {
                <p className="text-slate-500 text-sm italic">{t('carousel.no_images')}</p>
             </div>
           )}
+        </div>
+      </div>
+
+      {/* Actualités Section - Modern Feed */}
+      <section className="py-20 bg-slate-50 dark:bg-slate-900/50 relative overflow-hidden border-t border-slate-100 dark:border-slate-800">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex justify-between items-center mb-12">
+            <div>
+              <h2 className="text-2xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tighter uppercase mb-2">
+                {t('about.news_pre')} <span className="text-blue-600 italic">{t('about.news_highlight')}</span>
+              </h2>
+              <div className="w-12 h-1 bg-blue-600 rounded-full" />
+            </div>
+            {!showAllNews && newsPosts.length > 3 && (
+              <button 
+                onClick={() => setShowAllNews(true)}
+                className="text-blue-600 text-xs font-black uppercase tracking-widest hover:underline flex items-center gap-2"
+              >
+                {t('about.view_all')} <ArrowRight className="w-3 h-3" />
+              </button>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {newsPosts.length > 0 ? (
+              displayedNews.map((post) => (
+                <Dialog key={post.id}>
+                  <DialogTrigger asChild>
+                    <div className="group bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer">
+                      <div className="text-blue-600 dark:text-blue-400 text-[10px] font-black mb-4 uppercase flex items-center gap-2">
+                        <Calendar className="w-3 h-3" /> {post.date}
+                      </div>
+                      <h3 className="text-xl font-black text-slate-900 dark:text-white mb-4 group-hover:text-blue-600 transition-colors line-clamp-2 uppercase tracking-tight">
+                        {post.title}
+                      </h3>
+                      <p className="text-base text-slate-500 dark:text-slate-400 font-medium leading-relaxed mb-6 line-clamp-3">
+                        {post.content}
+                      </p>
+                      <button className="flex items-center gap-2 text-[10px] font-black text-blue-600 uppercase tracking-widest hover:translate-x-1 transition-transform">
+                        {t('about.read_more')} <ArrowRight className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl p-0 overflow-hidden rounded-2xl border border-slate-800/10 dark:border-slate-800 bg-white dark:bg-slate-900">
+                    <div className="h-44 relative">
+                        {post.imageUrl ? (
+                            <img src={post.imageUrl} className="w-full h-full object-cover" alt={post.title} />
+                        ) : (
+                            <div className="w-full h-full flex items-center justify-center bg-slate-950 text-white font-black text-2xl uppercase">ASAFS</div>
+                        )}
+                        <div className="absolute inset-0 bg-black/40" />
+                    </div>
+                    <div className="p-8">
+                        <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400 text-[10px] font-black uppercase mb-4">
+                            <Calendar className="w-3 h-3" /> {post.date}
+                        </div>
+                        <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-4 uppercase tracking-tight">{post.title}</h2>
+                        <div className="prose prose-slate dark:prose-invert prose-sm max-w-none text-slate-600 dark:text-slate-400 leading-relaxed font-medium whitespace-pre-wrap max-h-[50vh] overflow-y-auto pr-2">
+                            {post.content}
+                        </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              ))
+            ) : (
+              <div className="col-span-full py-16 text-center bg-white dark:bg-slate-900 rounded-3xl border border-dashed border-slate-200 dark:border-slate-800">
+                 <p className="text-slate-400 dark:text-slate-500 text-sm italic">{t('about.no_news')}</p>
+              </div>
+            )}
+          </div>
+
+          {newsPosts.length > 3 && (
+            <div className="mt-12 text-center">
+              <button
+                onClick={() => setShowAllNews(!showAllNews)}
+                className="inline-flex items-center gap-2 px-8 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-full text-xs font-black uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-sm active:scale-95"
+              >
+                {showAllNews ? t('common.show_less') : t('common.show_more')}
+                <ArrowRight className={`w-3 h-3 transition-transform ${showAllNews ? '-rotate-90' : 'rotate-90'}`} />
+              </button>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Partners Section - Trusted Collaborations */}
+      <div className="py-16 bg-white dark:bg-slate-950 border-t border-slate-100 dark:border-slate-800">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-10">
+            <h2 className="text-xl md:text-2xl font-black text-slate-800 dark:text-white tracking-widest uppercase opacity-50">
+              {t('home.partners_title')}
+            </h2>
+            <div className="w-12 h-1 bg-blue-600 mx-auto rounded-full mt-2" />
+          </div>
+          
+          <div className="flex flex-wrap items-center justify-center gap-12 md:gap-20">
+            {partnerPosts.length > 0 ? (
+              partnerPosts.map((partner) => (
+                <div key={partner.id} className="group flex flex-col items-center gap-3 transition-all duration-500">
+                  {partner.content && partner.content.startsWith('http') ? (
+                    <a href={partner.content} target="_blank" rel="noopener noreferrer" className="relative">
+                       <img 
+                        src={partner.imageUrl} 
+                        alt={partner.title} 
+                        className="h-16 md:h-20 w-auto object-contain grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500" 
+                      />
+                    </a>
+                  ) : (
+                    <img 
+                      src={partner.imageUrl} 
+                      alt={partner.title} 
+                      className="h-16 md:h-20 w-auto object-contain grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500" 
+                    />
+                  )}
+                  <div className="flex flex-col items-center">
+                    <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest group-hover:text-blue-600 transition-colors">
+                      {partner.title}
+                    </span>
+                    {partner.category && (
+                      <span className="text-[8px] font-bold text-slate-300 dark:text-slate-600 uppercase tracking-tighter">
+                        {t(`categories.${partner.category}`, { defaultValue: partner.category })}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="flex flex-wrap items-center justify-center gap-12 md:gap-24 opacity-60">
+                <img 
+                  src="/partners/uwezo-afrika.png" 
+                  alt="Uwezo Afrika" 
+                  className="h-16 md:h-20 w-auto object-contain grayscale hover:grayscale-0 transition-all" 
+                />
+                <img 
+                  src="/partners/ddc-suisse.png" 
+                  alt="DDC Suisse" 
+                  className="h-16 md:h-20 w-auto object-contain grayscale hover:grayscale-0 transition-all" 
+                />
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

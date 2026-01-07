@@ -6,10 +6,34 @@ import Footer from '@/components/ui/Footer';
 import { useTranslation } from 'react-i18next';
 
 export const Programs = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const location = useLocation();
   const { getPublishedPostsByType } = useContent();
   const programmePosts = getPublishedPostsByType('programme');
+
+  const getProgramStatus = (startDateStr: string, endDateStr?: string) => {
+    if (!startDateStr) return 'future';
+    const now = new Date();
+    const startDate = new Date(startDateStr);
+    const endDate = endDateStr ? new Date(endDateStr) : null;
+    
+    now.setHours(0, 0, 0, 0);
+    startDate.setHours(0, 0, 0, 0);
+    if (endDate) endDate.setHours(23, 59, 59, 999);
+
+    if (endDate && now > endDate) return 'past';
+    if (!endDate && startDate < now) return 'past';
+    if (now < startDate) return 'future';
+    return 'current';
+  };
+
+  const formatDate = (dateStr: string) => {
+    return new Date(dateStr).toLocaleDateString(i18n.language === 'swa' ? 'sw-TZ' : i18n.language, {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+  };
 
   return (
     <section className="bg-white dark:bg-slate-950 transition-colors duration-300">
@@ -40,62 +64,28 @@ export const Programs = () => {
       </div>
 
       <div className="container mx-auto px-6 pb-16">
-        {/* Core Programs - Focused Feed */}
-        <div className="space-y-12">
-          <ProgramCard
-            image="https://images.unsplash.com/photo-1544650030-3c997b712911?q=80&w=2070&auto=format&fit=crop"
-            title={t('programs.p1_title')}
-            subtitle={t('programs.p1_subtitle')}
-            description={t('programs.p1_desc')}
-          />
-
-          <ProgramCard
-            image="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=2070&auto=format&fit=crop"
-            title={t('programs.p2_title')}
-            subtitle={t('programs.p2_subtitle')}
-            description={t('programs.p2_desc')}
-            imagePosition="right"
-          />
+        {/* Dynamic Programs - Managed from Admin Dashboard */}
+        <div className="space-y-20">
+          {programmePosts.length > 0 ? (
+            programmePosts.map((post, index) => (
+              <ProgramCard
+                key={post.id}
+                image={post.imageUrl || "https://images.unsplash.com/photo-1544650030-3c997b712911?q=80&w=2070&auto=format&fit=crop"}
+                title={post.title}
+                subtitle={post.endDate ? `${t('common.from')} ${formatDate(post.date)} ${t('common.to')} ${formatDate(post.endDate)}` : `${t('common.from')} ${formatDate(post.date)}`}
+                description={post.content}
+                imagePosition={index % 2 === 0 ? 'left' : 'right'}
+                status={getProgramStatus(post.date, post.endDate)}
+              />
+            ))
+          ) : (
+            <div className="py-24 text-center bg-slate-50 dark:bg-slate-900 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-800">
+               <p className="text-slate-400 dark:text-slate-500 font-black uppercase tracking-widest text-sm italic">
+                 {t('programs.no_content', { defaultValue: 'Aucun programme disponible pour le moment.' })}
+               </p>
+            </div>
+          )}
         </div>
-
-        {/* Dynamic Programs - Modern Grid */}
-        {programmePosts.length > 0 && (
-          <div className="mt-20">
-            <div className="text-center mb-12">
-              <h2 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white mb-2 tracking-tighter uppercase">
-                {t('programs.other_pre')} <span className="text-blue-600 italic">{t('programs.other_highlight')}</span>
-              </h2>
-              <div className="w-12 h-1 bg-blue-600 mx-auto rounded-full" />
-            </div>
-            
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {programmePosts.map((post) => (
-                <div key={post.id} className="group bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all">
-                  <div className="aspect-[21/9] relative overflow-hidden bg-slate-100">
-                    {post.imageUrl ? (
-                      <img src={post.imageUrl} alt={post.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-slate-200 uppercase font-black tracking-tighter">ASAFS</div>
-                    )}
-                    <div className="absolute top-4 left-4">
-                       <span className="px-3 py-1 bg-white/95 backdrop-blur-sm shadow-sm rounded-lg text-[9px] font-black text-blue-600 uppercase tracking-widest">
-                          {post.date}
-                       </span>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-blue-600 transition-colors uppercase tracking-tight">{post.title}</h3>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2 mb-4 font-medium">{post.content}</p>
-                    <div className="flex items-center justify-between pt-4 border-t border-slate-50 dark:border-slate-800">
-                       <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider">{post.author || t('programs.team')}</span>
-                       <button className="text-blue-600 dark:text-blue-400 text-xs font-black uppercase hover:underline">{t('programs.details')} →</button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
       <Footer />
     </section>

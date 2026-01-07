@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../services/api';
 import { toast } from 'sonner';
 
-export type ContentType = "about" | "programme" | "evenement" | "carousel" | "activite";
+export type ContentType = "about" | "programme" | "evenement" | "carousel" | "activite" | "partenaire" | "timeline";
 
 export interface Post {
     id: string;
@@ -11,6 +11,7 @@ export interface Post {
     content: string;
     category?: string;
     date: string;
+    endDate?: string;
     status: "draft" | "published";
     imageUrl?: string;
     author?: string;

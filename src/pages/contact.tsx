@@ -37,11 +37,9 @@ const Contact: React.FC = () => {
               <div className="w-14 h-14 bg-blue-50 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center text-blue-600 dark:text-blue-400 mb-6 font-bold">
                 <MapPin className="w-7 h-7" />
               </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Notre Bureau</h3>
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{t('contact.office_title')}</h3>
               <p className="text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
-                Province du Sud-Kivu, Avenue Kindu, <br />
-                Commune d'Ibanda, Bukavu, <br />
-                République Démocratique du Congo
+                {t('contact.office_address')}
               </p>
             </div>
 
@@ -49,7 +47,7 @@ const Contact: React.FC = () => {
               <div className="w-14 h-14 bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 mb-6">
                 <Mail className="w-7 h-7" />
               </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Email & Phone</h3>
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{t('contact.email_phone', { defaultValue: 'Email & Phone' })}</h3>
               <div className="space-y-2">
                 <a href="mailto:contact@asafs.org" className="block text-slate-500 dark:text-slate-400 font-medium hover:text-blue-600 dark:hover:text-blue-400 transition-colors italic">contact@asafs.org</a>
                 <a href="tel:+243123456789" className="block text-slate-900 dark:text-slate-200 font-black">+243 123 456 789</a>
@@ -60,10 +58,10 @@ const Contact: React.FC = () => {
               <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center text-blue-400 mb-6 font-bold">
                 <Clock className="w-7 h-7" />
               </div>
-              <h3 className="text-xl font-bold mb-2">Disponibilité</h3>
+              <h3 className="text-xl font-bold mb-2">{t('contact.availability_title')}</h3>
               <p className="text-slate-400 dark:text-slate-400 text-sm font-medium leading-relaxed">
-                Lundi - Vendredi : 08:30 — 17:00 <br />
-                Samedi : 09:00 — 12:00
+                {t('contact.availability_weekdays')} <br />
+                {t('contact.availability_saturday')}
               </p>
             </div>
           </div>
@@ -97,11 +95,11 @@ const Contact: React.FC = () => {
                     const { toast } = await import('sonner');
                     
                     await api.post('/contact', data);
-                    toast.success("Message envoyé avec succès !");
+                    toast.success(t('contact.success_send', { defaultValue: 'Message envoyé avec succès !' }));
                     (e.target as HTMLFormElement).reset();
                   } catch (error) {
                     const { toast } = await import('sonner');
-                    toast.error("Erreur lors de l'envoi du message");
+                    toast.error(t('contact.error_send', { defaultValue: 'Erreur lors de l\'envoi du message' }));
                   } finally {
                     const btn = e.currentTarget.querySelector('button');
                     if (btn) btn.disabled = false;
@@ -138,7 +136,7 @@ const Contact: React.FC = () => {
                     name="subject"
                     type="text" 
                     required
-                    placeholder="Sujet de votre message"
+                    placeholder={t('contact.placeholder_subject', { defaultValue: 'Sujet de votre message' })}
                     className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 dark:text-white transition-all" 
                   />
                 </div>
@@ -149,7 +147,7 @@ const Contact: React.FC = () => {
                     name="message"
                     required
                     rows={6} 
-                    placeholder="Comment pouvons-nous vous aider ?"
+                    placeholder={t('contact.placeholder_message', { defaultValue: 'Comment pouvons-nous vous aider ?' })}
                     className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 dark:text-white transition-all resize-none" 
                   />
                 </div>

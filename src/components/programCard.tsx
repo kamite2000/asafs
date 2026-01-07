@@ -4,18 +4,45 @@ interface ProgramCardProps {
     subtitle: string;
     description: string;
     imagePosition?: 'left' | 'right';
+    status?: 'past' | 'current' | 'future';
   }
   
+  import { useTranslation } from 'react-i18next';
+
   export const ProgramCard = ({
     image,
     title,
     subtitle,
     description,
-    imagePosition = 'left'
+    imagePosition = 'left',
+    status
   }: ProgramCardProps) => {
+    const { t } = useTranslation();
+    
+    const getStatusStyles = () => {
+      switch (status) {
+        case 'past': return { color: 'bg-red-500', text: t('events.status_past'), textColor: 'text-red-500' };
+        case 'current': return { color: 'bg-green-500', text: t('events.status_current'), textColor: 'text-green-500' };
+        case 'future': return { color: 'bg-yellow-500', text: t('events.status_future'), textColor: 'text-yellow-600' };
+        default: return null;
+      }
+    };
+
+    const statusStyles = getStatusStyles();
+
     const content = (
       <div className="space-y-2 p-6 flex-1">
-        <h3 className="text-xl md:text-2xl font-black text-slate-900 dark:text-white tracking-tighter uppercase">{title}</h3>
+        <div className="flex items-center justify-between mb-2">
+            <h3 className="text-xl md:text-2xl font-black text-slate-900 dark:text-white tracking-tighter uppercase whitespace-normal truncate">{title}</h3>
+            {statusStyles && (
+                <div className="flex items-center gap-1.5 shrink-0 ml-4">
+                    <div className={`w-2 h-2 rounded-full ${statusStyles.color}`} />
+                    <span className={`text-[10px] font-black uppercase ${statusStyles.textColor}`}>
+                        {statusStyles.text}
+                    </span>
+                </div>
+            )}
+        </div>
         <p className="text-[10px] font-black text-blue-600 dark:text-blue-400 tracking-widest uppercase">{subtitle}</p>
         <div className="w-8 h-1 bg-blue-600 rounded-full" />
         <p className="text-[13px] text-slate-500 dark:text-slate-400 leading-relaxed font-medium pt-2">

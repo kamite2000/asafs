@@ -23,7 +23,7 @@ const router = Router();
  *         name: type
  *         schema:
  *           type: string
- *           enum: [about, programme, evenement, carousel]
+ *           enum: [about, programme, evenement, carousel, partenaire, timeline]
  *         description: Filter by post type
  *       - in: query
  *         name: status
@@ -54,7 +54,7 @@ router.get('/', getAllPosts);
  *             properties:
  *               type:
  *                 type: string
- *                 enum: [about, programme, evenement, carousel]
+ *                 enum: [about, programme, evenement, carousel, partenaire, timeline]
  *               title:
  *                 type: string
  *               content:

@@ -29,6 +29,7 @@ export class ContentService {
         content: data.content,
         category: data.category,
         date: data.date,
+        endDate: data.endDate,
         status: data.status,
         author: data.author,
         imageUrl: imageUrl
@@ -47,6 +48,7 @@ export class ContentService {
         content: data.content,
         category: data.category,
         date: data.date,
+        endDate: data.endDate,
         status: data.status,
         author: data.author,
         imageUrl: imageUrl

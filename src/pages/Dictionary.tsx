@@ -126,7 +126,7 @@ const Dictionary = () => {
                                         {item.label}
                                     </h3>
                                     <p className="text-[9px] font-black text-blue-600 uppercase tracking-widest">
-                                        {item.category === 'alphabet' ? 'Lettre' : item.category}
+                                        {item.category === 'alphabet' ? t('dictionary.letter', { defaultValue: 'Lettre' }) : t(`dictionary.cat_${item.category}`, { defaultValue: item.category })}
                                     </p>
                                 </div>
 
@@ -144,7 +144,7 @@ const Dictionary = () => {
                             <div className="w-20 h-20 bg-slate-100 dark:bg-slate-900 rounded-full flex items-center justify-center mx-auto">
                                 <Search className="w-8 h-8 text-slate-300" />
                             </div>
-                            <p className="text-slate-400 font-medium italic">Aucun résultat trouvé pour votre recherche.</p>
+                            <p className="text-slate-400 font-medium italic">{t('dictionary.no_results')}</p>
                         </div>
                     )}
                 </div>
@@ -157,11 +157,9 @@ const Dictionary = () => {
                             <GraduationCap className="w-10 h-10" />
                         </div>
                         <div className="space-y-4 text-center md:text-left">
-                            <h2 className="text-3xl font-black uppercase tracking-tight">Conseils d'Apprentissage</h2>
+                            <h2 className="text-3xl font-black uppercase tracking-tight">{t('dictionary.advice_title')}</h2>
                             <p className="text-blue-100 font-medium leading-relaxed max-w-3xl">
-                                La pratique est la clé. Essayez de répéter chaque signe devant un miroir pour vérifier votre position. 
-                                La Langue des Signes n'est pas seulement une affaire de mains, n'oubliez pas d'utiliser votre expression faciale 
-                                pour donner du contexte à vos messages.
+                                {t('dictionary.advice_text')}
                             </p>
                         </div>
                     </div>

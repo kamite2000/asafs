@@ -73,7 +73,7 @@ export default function Donate() {
     if (id === 'orange') return theme === 'dark' ? '/logos/orange_dark.png' : '/logos/orange_light.png';
     if (id === 'airtel') return theme === 'dark' ? '/logos/airtel_dark.png' : '/logos/airtel_light.png';
     if (id === 'maishapay') return '/logos/maishapay.png';
-    if (id === 'stripe') return '/logos/stripe.png';
+    if (id === 'stripe') return '/logos/visa-mastercard.png';
     return 'https://cdn-icons-png.flaticon.com/512/2830/2830284.png';
   };
 
@@ -175,8 +175,7 @@ export default function Donate() {
                       { id: 'orange', name: 'Orange' },
                       { id: 'airtel', name: 'Airtel' },
                       { id: 'maishapay', name: 'Maisha Pay' },
-                      { id: 'stripe', name: 'Carte / Stripe' },
-                      { id: 'bank', name: 'Virement' }
+                      { id: 'stripe', name: 'Carte Visa / Master' }
                     ].map((p) => (
                       <button
                         key={p.id}
@@ -269,17 +268,17 @@ export default function Donate() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {[
-                { icon: ShieldCheck, title: "Transparence", desc: "100% des dons vont au terrain", color: "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400" },
-                { icon: Globe, title: "Portée Locale", desc: "Impact direct au Sud-Kivu", color: "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400" },
-                { icon: Users, title: "Communauté", desc: "Soutien aux familles", color: "bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400" },
-                { icon: Heart, title: "Dignité", desc: "Restauration des droits", color: "bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400" }
+                { icon: ShieldCheck, title: "Transparence de Cœur", desc: "Chaque centime est une promesse tenue. Nous documentons chaque action pour que votre aide arrive là où le besoin est réel.", color: "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400" },
+                { icon: Heart, title: "Vies Transformées", desc: "Vous n'offrez pas seulement un don, vous brisez les chaînes du silence pour redonner une voix à celles que le monde oublie.", color: "bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400" },
+                { icon: Globe, title: "Impact Direct au Kivu", desc: "Pas d'intermédiaires. Nous sommes sur le terrain, aux côtés de nos sœurs, pour transformer leur quotidien en un avenir de dignité.", color: "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400" },
+                { icon: Users, title: "Justice & Dignité", desc: "Le handicap ne doit plus être une condamnation. Ensemble, nous restaurons les droits fondamentaux et l'honneur de chaque femme.", color: "bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400" }
               ].map((item, i) => (
                 <div key={i} className="p-6 rounded-[2rem] border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                   <div className={`w-12 h-12 ${item.color} rounded-xl flex items-center justify-center mb-4`}>
                     <item.icon className="w-6 h-6" />
                   </div>
-                  <h4 className="font-bold text-slate-900 dark:text-white mb-1">{item.title}</h4>
-                  <p className="text-slate-400 dark:text-slate-500 text-xs font-medium">{item.desc}</p>
+                  <h4 className="font-bold text-slate-900 dark:text-white mb-1 uppercase text-sm tracking-tight">{item.title}</h4>
+                  <p className="text-slate-500 dark:text-slate-400 text-[11px] leading-relaxed font-medium">{item.desc}</p>
                 </div>
               ))}
             </div>

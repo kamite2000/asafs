@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import api from "@/services/api";
 
 // Define Types
-type ContentType = "about" | "programme" | "evenement" | "carousel" | "activite";
+type ContentType = "about" | "programme" | "evenement" | "carousel" | "activite" | "partenaire" | "timeline";
 
 interface Post {
     id: string;
@@ -11,6 +11,7 @@ interface Post {
     content: string; // Markdown or simple text
     category?: string;
     date: string;
+    endDate?: string;
     status: "draft" | "published";
     imageUrl?: string;
     author?: string;

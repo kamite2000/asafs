@@ -12,124 +12,64 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 
-function EventCard({ date, title, description }: { date: string; title: string; description: string }) {
-    const { t } = useTranslation();
-    const getEventStatus = (eventDate: string) => {
+
+
+export default function Events() {
+    const { t, i18n } = useTranslation();
+    const location = useLocation();
+    const { getPublishedPostsByType } = useContent();
+    const events = getPublishedPostsByType('evenement');
+
+    const getEventStatus = (startDateStr: string, endDateStr?: string) => {
+        if (!startDateStr) return 'future';
         const now = new Date();
-        const event = new Date(eventDate);
-
+        const startDate = new Date(startDateStr);
+        const endDate = endDateStr ? new Date(endDateStr) : null;
+        
         now.setHours(0, 0, 0, 0);
-        event.setHours(0, 0, 0, 0);
+        startDate.setHours(0, 0, 0, 0);
+        if (endDate) endDate.setHours(23, 59, 59, 999);
 
-        if (event < now) {
-            return 'past';
-        } else if (event.getTime() === now.getTime()) {
-            return 'current';
-        } else {
-            return 'future';
-        }
+        if (endDate && now > endDate) return 'past';
+        if (!endDate && startDate < now) return 'past';
+        if (now < startDate) return 'future';
+        return 'current';
     };
 
     const getStatusColor = (status: string) => {
         switch (status) {
-            case 'past':
-                return 'bg-red-500';
-            case 'current':
-                return 'bg-yellow-500';
-            case 'future':
-                return 'bg-green-500';
-            default:
-                return 'bg-gray-500';
-        }
-    };
-
-    const getStatusText = (status: string) => {
-        switch (status) {
-            case 'past':
-                return t('events.status_past');
-            case 'current':
-                return t('events.status_current');
-            case 'future':
-                return t('events.status_future');
-            default:
-                return '';
+            case 'past': return 'bg-red-500';
+            case 'current': return 'bg-green-500';
+            case 'future': return 'bg-yellow-500';
+            default: return 'bg-gray-500';
         }
     };
 
     const getTextColorClass = (status: string) => {
         switch (status) {
-            case 'past':
-                return 'text-red-500';
-            case 'current':
-                return 'text-yellow-600';
-            case 'future':
-                return 'text-green-500';
-            default:
-                return 'text-gray-500';
+            case 'past': return 'text-red-500';
+            case 'current': return 'text-green-500';
+            case 'future': return 'text-yellow-600';
+            default: return 'text-gray-500';
         }
     };
 
-    const status = getEventStatus(date);
-    const statusColor = getStatusColor(status);
-    const statusText = getStatusText(status);
+    const getStatusText = (status: string) => {
+        switch (status) {
+            case 'past': return t('events.status_past');
+            case 'current': return t('events.status_current');
+            case 'future': return t('events.status_future');
+            default: return '';
+        }
+    };
 
-    return (
-        <Dialog>
-            <DialogTrigger asChild>
-                <div className="flex gap-6 p-4 border-b border-gray-200 hover:bg-gray-50 transition-colors cursor-pointer text-left w-full group">
-                    <div className="w-48 h-32 bg-gray-200 flex-shrink-0" />
-                    <div className="flex-1">
-                        <div className="flex items-center gap-4 mb-2">
-                            <div className="flex items-center gap-2 text-blue-600">
-                                <CalendarIcon className="w-4 h-4" />
-                                <span className="text-sm">{date}</span>
-                            </div>
-                            <div className="flex items-center gap-1.5">
-                                <div className={`w-2 h-2 rounded-full ${statusColor}`} />
-                                <span className={`text-sm font-medium ${getTextColorClass(status)}`}>
-                                    {statusText}
-                                </span>
-                            </div>
-                        </div>
-                        <h3 className="text-xl font-semibold mb-2 group-hover:text-blue-600 transition-colors">{title}</h3>
-                        <p className="text-gray-600 line-clamp-2">{description}</p>
-                    </div>
-                </div>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[700px]">
-                <DialogHeader>
-                    <DialogTitle className="text-2xl font-bold mb-2">{title}</DialogTitle>
-                    <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
-                        <div className="flex items-center gap-2">
-                            <CalendarIcon className="w-4 h-4" />
-                            <span>{date}</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                            <div className={`w-2 h-2 rounded-full ${statusColor}`} />
-                            <span className={`font-medium ${getTextColorClass(status)}`}>
-                                {statusText}
-                            </span>
-                        </div>
-                    </div>
-                </DialogHeader>
-                <div className="mt-4">
-                    <div className="w-full h-64 bg-gray-200 mb-6 rounded-lg" />
-                    <div className="prose max-w-none">
-                        <p className="text-gray-700 leading-relaxed text-lg">
-                            {description}
-                        </p>
-                    </div>
-                </div>
-            </DialogContent>
-        </Dialog>
-    );
-}
-
-export default function Events() {
-    const { t } = useTranslation();
-    const location = useLocation();
-    const { getPublishedPostsByType } = useContent();
-    const events = getPublishedPostsByType('evenement');
+    const formatDate = (dateStr: string) => {
+        return new Date(dateStr).toLocaleDateString(i18n.language === 'swa' ? 'sw-TZ' : i18n.language, {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
+    };
 
     return (
         <>
@@ -167,7 +107,17 @@ export default function Events() {
                                             )}
                                         </div>
                                         <div className="p-4">
-                                            <div className="text-blue-600 dark:text-blue-400 text-[9px] font-black uppercase mb-1">📅 {event.date}</div>
+                                            <div className="flex items-center justify-between mb-2">
+                                                <div className="text-blue-600 dark:text-blue-400 text-[9px] font-black uppercase flex items-center gap-1">
+                                                    📅 {event.endDate ? `${t('common.from')} ${formatDate(event.date)} ${t('common.to')} ${formatDate(event.endDate)}` : formatDate(event.date)}
+                                                </div>
+                                                <div className="flex items-center gap-1.5">
+                                                    <div className={`w-1.5 h-1.5 rounded-full ${getStatusColor(getEventStatus(event.date, event.endDate))}`} />
+                                                    <span className={`text-[9px] font-black uppercase ${getTextColorClass(getEventStatus(event.date, event.endDate))}`}>
+                                                        {getStatusText(getEventStatus(event.date, event.endDate))}
+                                                    </span>
+                                                </div>
+                                            </div>
                                             <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-1 group-hover:text-blue-600 transition-colors uppercase truncate tracking-tight">
                                                 {event.title}
                                             </h3>
@@ -188,10 +138,18 @@ export default function Events() {
                                     </div>
                                     <div className="p-6 bg-white dark:bg-slate-900">
                                         <div className="flex items-center gap-3 mb-3">
-                                             <span className="px-2 py-0.5 bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400 rounded-md text-[9px] font-black uppercase tracking-wider">📅 {event.date}</span>
+                                             <span className="px-2 py-0.5 bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400 rounded-md text-[9px] font-black uppercase tracking-wider">
+                                                📅 {event.endDate ? `${t('common.from')} ${formatDate(event.date)} ${t('common.to')} ${formatDate(event.endDate)}` : formatDate(event.date)}
+                                             </span>
+                                             <div className="flex items-center gap-1.5 ml-auto">
+                                                <div className={`w-2 h-2 rounded-full ${getStatusColor(getEventStatus(event.date, event.endDate))}`} />
+                                                <span className={`text-[10px] font-black uppercase ${getTextColorClass(getEventStatus(event.date, event.endDate))}`}>
+                                                    {getStatusText(getEventStatus(event.date, event.endDate))}
+                                                </span>
+                                             </div>
                                         </div>
                                         <h2 className="text-lg font-black text-slate-900 dark:text-white mb-3 uppercase tracking-tight">{event.title}</h2>
-                                        <div className="prose prose-slate prose-sm text-slate-600 dark:text-slate-400 leading-relaxed font-medium whitespace-pre-wrap line-clamp-6">
+                                        <div className="prose prose-slate prose-sm text-slate-600 dark:text-slate-400 leading-relaxed font-medium whitespace-pre-wrap max-h-[40vh] overflow-y-auto">
                                             {event.content}
                                         </div>
                                     </div>
