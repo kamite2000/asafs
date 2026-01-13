@@ -41,6 +41,7 @@ model NewsletterSubscription {
   updatedAt DateTime @updatedAt
 }
 
+
 model ContactMessage {
   id        String   @id @default(uuid())
   name      String
@@ -50,4 +51,13 @@ model ContactMessage {
   isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model SiteSettings {
+  id           String   @id @default("default")
+  facebookUrl  String?
+  twitterUrl   String?
+  instagramUrl String?
+  linkedinUrl  String?
+  updatedAt    DateTime @updatedAt
 }

@@ -31,7 +31,7 @@ import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Loader2, Plus, Pencil, Trash2, LayoutDashboard, FileText, Calendar, Image as ImageIcon, LogOut, Settings, Mail, Bell, Users, CheckCircle, Eye, Handshake, Menu, X } from 'lucide-react';
 import { cn } from "@/lib/utils";
-import { useContacts, useNewsletterSubs, useMarkContactRead, useDeleteContact } from '@/hooks/useAdminData';
+import { useContacts, useNewsletterSubs, useMarkContactRead, useDeleteContact, useSettings, useUpdateSettings } from '@/hooks/useAdminData';
 import { StatsCard } from '@/components/dashboard/StatsCard';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -57,9 +57,40 @@ const Dashboard = () => {
     const markContactReadMutation = useMarkContactRead();
     const deleteContactMutation = useDeleteContact();
 
+
     const createPostMutation = useCreatePost();
     const updatePostMutation = useUpdatePost();
     const deletePostMutation = useDeletePost();
+
+    const { data: settings } = useSettings();
+    const updateSettingsMutation = useUpdateSettings();
+    const [socialLinks, setSocialLinks] = useState({
+        facebook: '',
+        twitter: '',
+        instagram: '',
+        linkedin: ''
+    });
+
+    useEffect(() => {
+        if (settings) {
+            setSocialLinks({
+                facebook: settings.facebookUrl || '',
+                twitter: settings.twitterUrl || '',
+                instagram: settings.instagramUrl || '',
+                linkedin: settings.linkedinUrl || ''
+            });
+        }
+    }, [settings]);
+
+    const handleSaveSettings = (e: React.FormEvent) => {
+        e.preventDefault();
+        updateSettingsMutation.mutate({
+            facebookUrl: socialLinks.facebook,
+            twitterUrl: socialLinks.twitter,
+            instagramUrl: socialLinks.instagram,
+            linkedinUrl: socialLinks.linkedin
+        });
+    };
 
     if (!currentUser) return null;
 
@@ -984,6 +1015,54 @@ const Dashboard = () => {
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+
+
+                                <div className="bg-white dark:bg-slate-900 p-4 md:p-8 rounded-lg md:rounded-xl shadow-sm border border-gray-100 dark:border-slate-800 transition-colors duration-300">
+                                    <h3 className="text-lg md:text-xl font-bold mb-4 md:mb-6 flex items-center gap-2 text-slate-900 dark:text-white">
+                                        🌐 Réseaux Sociaux
+                                    </h3>
+                                    <form onSubmit={handleSaveSettings} className="space-y-4">
+                                        <div>
+                                            <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Facebook</label>
+                                            <Input 
+                                                value={socialLinks.facebook} 
+                                                onChange={(e) => setSocialLinks({...socialLinks, facebook: e.target.value})}
+                                                placeholder="https://facebook.com/..."
+                                                className="text-sm bg-gray-50 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-600" 
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Twitter / X</label>
+                                            <Input 
+                                                value={socialLinks.twitter} 
+                                                onChange={(e) => setSocialLinks({...socialLinks, twitter: e.target.value})}
+                                                placeholder="https://twitter.com/..."
+                                                className="text-sm bg-gray-50 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-600" 
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Instagram</label>
+                                            <Input 
+                                                value={socialLinks.instagram} 
+                                                onChange={(e) => setSocialLinks({...socialLinks, instagram: e.target.value})}
+                                                placeholder="https://instagram.com/..."
+                                                className="text-sm bg-gray-50 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-600" 
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">LinkedIn</label>
+                                            <Input 
+                                                value={socialLinks.linkedin} 
+                                                onChange={(e) => setSocialLinks({...socialLinks, linkedin: e.target.value})}
+                                                placeholder="https://linkedin.com/in/..."
+                                                className="text-sm bg-gray-50 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-600" 
+                                            />
+                                        </div>
+                                        <Button type="submit" disabled={updateSettingsMutation.isPending} className="w-full bg-blue-600 hover:bg-blue-700">
+                                            {updateSettingsMutation.isPending ? 'Enregistrement...' : 'Enregistrer les liens'}
+                                        </Button>
+                                    </form>
                                 </div>
 
                                 <div className="bg-white dark:bg-slate-900 p-4 md:p-8 rounded-lg md:rounded-xl shadow-sm border border-gray-100 dark:border-slate-800 transition-colors duration-300">

@@ -2,9 +2,22 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Facebook, Twitter, Instagram, Linkedin, MapPin, Mail, Phone, Heart } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import api from '@/services/api';
+import { toast } from 'sonner';
+
+
+import { useSettings } from '@/hooks/useAdminData';
 
 const Footer: React.FC = () => {
   const { t } = useTranslation();
+  const { data: settings } = useSettings();
+
+  const socialLinks = [
+    { icon: Facebook, url: settings?.facebookUrl },
+    { icon: Twitter, url: settings?.twitterUrl },
+    { icon: Instagram, url: settings?.instagramUrl },
+    { icon: Linkedin, url: settings?.linkedinUrl },
+  ].filter(link => link.url);
 
   return (
     <footer className="bg-slate-950 text-white pt-12 pb-6 overflow-hidden border-t border-white/5">
@@ -29,9 +42,9 @@ const Footer: React.FC = () => {
               {t('footer.tagline')}
             </p>
             <div className="flex gap-2">
-              {[Facebook, Twitter, Instagram, Linkedin].map((Icon, i) => (
-                <a key={i} href="#" className="w-8 h-8 bg-white/5 rounded-lg flex items-center justify-center hover:bg-blue-600 transition-all">
-                  <Icon className="w-3.5 h-3.5" />
+              {socialLinks.map((item, i) => (
+                <a key={i} href={item.url} target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-white/5 rounded-lg flex items-center justify-center hover:bg-blue-600 transition-all">
+                  <item.icon className="w-3.5 h-3.5" />
                 </a>
               ))}
             </div>
@@ -73,32 +86,28 @@ const Footer: React.FC = () => {
                 <Heart className="w-3.5 h-3.5 fill-current" />
                 {t('nav.donate')}
               </Link>
-            <div className="p-3 bg-white/5 rounded-xl border border-white/5">
+              <div className="p-3 bg-white/5 rounded-xl border border-white/5">
                 <h5 className="text-[9px] font-black mb-2 uppercase tracking-widest italic text-blue-500/80">{t('footer.newsletter_title')}</h5>
-                <form 
+                <form
                   onSubmit={async (e) => {
                     e.preventDefault();
                     const email = (e.currentTarget.elements.namedItem('email') as HTMLInputElement).value;
                     if (!email) return;
-                    
+
                     try {
                       const btn = e.currentTarget.querySelector('button');
                       if (btn) btn.disabled = true;
-                      
-                      const { default: api } = await import('@/services/api');
-                      const { toast } = await import('sonner');
-                      
+
                       await api.post('/newsletter/subscribe', { email });
                       toast.success(t('footer.success_subscribe'));
                       e.currentTarget.reset();
                     } catch (error) {
-                      const { toast } = await import('sonner');
                       toast.error(t('footer.error_subscribe'));
                     } finally {
                       const btn = e.currentTarget.querySelector('button');
                       if (btn) btn.disabled = false;
                     }
-                  }} 
+                  }}
                   className="flex flex-col gap-1.5"
                 >
                   <input
@@ -131,7 +140,7 @@ const Footer: React.FC = () => {
               </div>
               <div className="flex items-center gap-2 p-2.5 bg-white/5 rounded-lg border border-white/5">
                 <Mail className="w-3.5 h-3.5 text-blue-500 shrink-0" />
-                <a href="mailto:info@asafs.org" className="text-slate-600 text-[11px] font-medium hover:text-white transition-colors truncate">info@asafs.org</a>
+                <a href="mailto:info@asafsourde.org" className="text-slate-600 text-[11px] font-medium hover:text-white transition-colors truncate">info@asafsourde.org</a>
               </div>
               <div className="flex items-center gap-2 p-2.5 bg-white/5 rounded-lg border border-white/5">
                 <Phone className="w-3.5 h-3.5 text-blue-500 shrink-0" />
@@ -147,7 +156,7 @@ const Footer: React.FC = () => {
             © {new Date().getFullYear()} ASAFS.
           </p>
           <div className="flex items-center gap-1 text-[9px] text-slate-700 font-bold uppercase tracking-widest">
-            {t('footer.powered_by')} 
+            {t('footer.powered_by')}
             <a href="https://aumsoft.net" className="text-slate-600 hover:text-blue-500 transition-colors">
               Aumsoft.net
             </a>

@@ -55,6 +55,7 @@ export const useDeleteContact = () => {
   });
 };
 
+
 // Newsletter Hooks
 export const useNewsletterSubs = () => {
   return useQuery({
@@ -63,5 +64,41 @@ export const useNewsletterSubs = () => {
       const { data } = await api.get('/newsletter');
       return (data.data || []) as NewsletterSubscription[];
     },
+  });
+};
+
+export interface SiteSettings {
+  id: string;
+  facebookUrl: string;
+  twitterUrl: string;
+  instagramUrl: string;
+  linkedinUrl: string;
+  updatedAt: string;
+}
+
+export const useSettings = () => {
+  return useQuery({
+    queryKey: ['settings'],
+    queryFn: async () => {
+      const { data } = await api.get('/settings');
+      return data.data as SiteSettings;
+    },
+  });
+};
+
+export const useUpdateSettings = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: Partial<SiteSettings>) => {
+      const res = await api.put('/settings', data);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['settings'] });
+      toast.success('Paramètres mis à jour');
+    },
+    onError: () => {
+      toast.error('Erreur lors de la mise à jour');
+    }
   });
 };
