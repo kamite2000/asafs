@@ -67,14 +67,17 @@ export const useNewsletterSubs = () => {
   });
 };
 
+
 export interface SiteSettings {
   id: string;
   facebookUrl: string;
   twitterUrl: string;
   instagramUrl: string;
   linkedinUrl: string;
+  missionVideoUrl: string;
   updatedAt: string;
 }
+
 
 export const useSettings = () => {
   return useQuery({

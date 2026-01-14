@@ -22,8 +22,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+
+import { useSettings } from "@/hooks/useAdminData";
+
 const Index = () => {
   const { t } = useTranslation();
+  const { data: settings } = useSettings();
   const { getPublishedPostsByType } = useContent();
   const carouselPosts = getPublishedPostsByType('carousel');
   const eventPosts = getPublishedPostsByType('evenement').slice(0, 2);
@@ -124,10 +128,16 @@ const Index = () => {
                 alt="Mission ASAFS" 
                 className="w-full h-full object-cover opacity-40 group-hover:scale-105 transition-transform duration-1000"
               />
+
               <div className="absolute inset-0 flex items-center justify-center">
-                <button className="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:bg-blue-500 transition-all duration-300">
+                <a 
+                  href={settings?.missionVideoUrl || "#"} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className={`w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:bg-blue-500 transition-all duration-300 ${!settings?.missionVideoUrl && 'opacity-50 cursor-not-allowed pointer-events-none'}`}
+                >
                   <Play className="w-6 h-6 fill-current ml-1" />
-                </button>
+                </a>
               </div>
               <div className="absolute bottom-6 left-6 right-6">
                 <p className="text-white/60 text-[10px] font-black uppercase tracking-widest text-center">

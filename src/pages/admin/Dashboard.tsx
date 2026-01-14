@@ -64,11 +64,13 @@ const Dashboard = () => {
 
     const { data: settings } = useSettings();
     const updateSettingsMutation = useUpdateSettings();
+
     const [socialLinks, setSocialLinks] = useState({
         facebook: '',
         twitter: '',
         instagram: '',
-        linkedin: ''
+        linkedin: '',
+        missionVideo: ''
     });
 
     useEffect(() => {
@@ -77,7 +79,8 @@ const Dashboard = () => {
                 facebook: settings.facebookUrl || '',
                 twitter: settings.twitterUrl || '',
                 instagram: settings.instagramUrl || '',
-                linkedin: settings.linkedinUrl || ''
+                linkedin: settings.linkedinUrl || '',
+                missionVideo: settings.missionVideoUrl || ''
             });
         }
     }, [settings]);
@@ -88,7 +91,8 @@ const Dashboard = () => {
             facebookUrl: socialLinks.facebook,
             twitterUrl: socialLinks.twitter,
             instagramUrl: socialLinks.instagram,
-            linkedinUrl: socialLinks.linkedin
+            linkedinUrl: socialLinks.linkedin,
+            missionVideoUrl: socialLinks.missionVideo
         });
     };
 
@@ -1050,6 +1054,7 @@ const Dashboard = () => {
                                                 className="text-sm bg-gray-50 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-600" 
                                             />
                                         </div>
+
                                         <div>
                                             <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">LinkedIn</label>
                                             <Input 
@@ -1059,6 +1064,17 @@ const Dashboard = () => {
                                                 className="text-sm bg-gray-50 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-600" 
                                             />
                                         </div>
+                                        <div className="pt-4 border-t border-gray-100 dark:border-slate-800">
+                                            <h4 className="text-sm font-bold mb-3 dark:text-white">Vidéo "Notre Mission"</h4>
+                                            <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Lien YouTube/Vimeo</label>
+                                            <Input 
+                                                value={socialLinks.missionVideo} 
+                                                onChange={(e) => setSocialLinks({...socialLinks, missionVideo: e.target.value})}
+                                                placeholder="https://www.youtube.com/watch?v=..."
+                                                className="text-sm bg-gray-50 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-600" 
+                                            />
+                                        </div>
+
                                         <Button type="submit" disabled={updateSettingsMutation.isPending} className="w-full bg-blue-600 hover:bg-blue-700">
                                             {updateSettingsMutation.isPending ? 'Enregistrement...' : 'Enregistrer les liens'}
                                         </Button>

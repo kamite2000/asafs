@@ -53,11 +53,14 @@ model ContactMessage {
   updatedAt DateTime @updatedAt
 }
 
+
 model SiteSettings {
-  id           String   @id @default("default")
-  facebookUrl  String?
-  twitterUrl   String?
-  instagramUrl String?
-  linkedinUrl  String?
-  updatedAt    DateTime @updatedAt
+  id              String   @id @default("default")
+  facebookUrl     String?
+  twitterUrl      String?
+  instagramUrl    String?
+  linkedinUrl     String?
+  missionVideoUrl String?
+  updatedAt       DateTime @updatedAt
 }
+

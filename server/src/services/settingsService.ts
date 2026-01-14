@@ -10,6 +10,7 @@ export class SettingsService {
       where: { id: 'default' }
     });
 
+
     if (!settings) {
       settings = await prisma.siteSettings.create({
         data: {
@@ -17,7 +18,8 @@ export class SettingsService {
           facebookUrl: '',
           twitterUrl: '',
           instagramUrl: '',
-          linkedinUrl: ''
+          linkedinUrl: '',
+          missionVideoUrl: ''
         }
       });
     }
@@ -25,7 +27,7 @@ export class SettingsService {
     return settings;
   }
 
-  async updateSettings(data: { facebookUrl?: string; twitterUrl?: string; instagramUrl?: string; linkedinUrl?: string }) {
+  async updateSettings(data: { facebookUrl?: string; twitterUrl?: string; instagramUrl?: string; linkedinUrl?: string; missionVideoUrl?: string }) {
     return await prisma.siteSettings.upsert({
       where: { id: 'default' },
       update: {
@@ -38,6 +40,7 @@ export class SettingsService {
       }
     });
   }
+
 }
 
 
