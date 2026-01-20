@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "ignoreDeprecations": "6.0",
+    "ignoreDeprecations": "",
     "target": "ES2020",
     "useDefineForClassFields": true,
     "lib": [

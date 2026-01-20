@@ -185,18 +185,7 @@ const AdminAuth: React.FC = () => {
                             />
                         </div>
 
-                        {isLogin && (
-                            <div className="bg-slate-50 border border-slate-100 p-4 rounded-xl flex items-start gap-3 shadow-sm">
-                                <div className="p-2 bg-blue-100 rounded-lg text-blue-600 mt-0.5">
-                                    💡
-                                </div>
-                                <div className="text-xs text-slate-600 leading-relaxed">
-                                    <p className="font-bold text-slate-900 mb-1 underline">Accès Démo :</p>
-                                    <p><span className="font-semibold">Admin:</span> admin@asafs.org / admin123</p>
-                                    <p><span className="font-semibold">Éditeur:</span> editor@asafs.org / editor123</p>
-                                </div>
-                            </div>
-                        )}
+
 
                         <Button
                             type="submit"
