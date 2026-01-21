@@ -34,8 +34,9 @@ const Footer: React.FC = () => {
                 />
               </div>
               <div className="text-left leading-tight">
-                <p className="text-[8px] font-black text-blue-500 tracking-widest uppercase">Action Solidaire</p>
-                <p className="text-[10px] font-bold text-white uppercase tracking-tighter">ASAFS RDC</p>
+                <p className="text-[15px] font-bold text-white uppercase tracking-tighter">ASAFS RDC</p>
+                <p className="text-[4px] font-black text-blue-500 tracking-widest uppercase">Action Solidaire pour l'automisation des femmes soudes</p>
+                
               </div>
             </Link>
             <p className="text-slate-500 text-[11px] leading-relaxed max-w-xs font-medium">
@@ -144,7 +145,7 @@ const Footer: React.FC = () => {
               </div>
               <div className="flex items-center gap-2 p-2.5 bg-white/5 rounded-lg border border-white/5">
                 <Phone className="w-3.5 h-3.5 text-blue-500 shrink-0" />
-                <a href="tel:+243000000000" className="text-slate-600 text-[11px] font-medium hover:text-white transition-colors">+243 (0) ...</a>
+                <a href="tel:+243812753704" className="text-slate-600 text-[11px] font-medium hover:text-white transition-colors">+243 812 753 704</a>
               </div>
             </div>
           </div>

@@ -40,8 +40,9 @@ const Navbar = () => {
               />
             </div>
             <div className="hidden lg:block text-left leading-tight">
-              <p className="text-[9px] font-black text-blue-600 tracking-widest uppercase">Action Solidaire</p>
-              <p className="text-[11px] font-bold text-slate-900 dark:text-white uppercase transition-colors">ASAFS RDC</p>
+              <p className="text-[15px] font-bold text-slate-900 dark:text-white uppercase transition-colors">ASAFS RDC</p>
+             
+              
             </div>
           </Link>
 
