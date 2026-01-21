@@ -22,12 +22,20 @@ export default defineConfig(({ mode }) => ({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            // Sépare les grosses librairies pour qu'elles soient mises en cache séparément
-            return id.toString().split('node_modules/')[1].split('/')[0].toString();
+            // Regroupe React et le routing ensemble
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
+              return 'vendor-core';
+            }
+            // Regroupe les icônes et les composants UI (Radix, Lucide)
+            if (id.includes('lucide-react') || id.includes('@radix-ui')) {
+              return 'vendor-ui';
+            }
+            // Tout le reste dans un paquet "vendor"
+            return 'vendor';
           }
         }
       }
     },
-    chunkSizeWarningLimit: 1000, // Augmente la limite pour ne plus voir l'alerte
+    chunkSizeWarningLimit: 1000,
   }
 }));
