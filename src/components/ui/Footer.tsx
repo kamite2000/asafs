@@ -35,7 +35,7 @@ const Footer: React.FC = () => {
               </div>
               <div className="text-left leading-tight">
                 <p className="text-[15px] font-bold text-white uppercase tracking-tighter">ASAFS RDC</p>
-                <p className="text-[8px] font-black text-blue-500 tracking-widest uppercase">Action Solidaire pour <br/>l'automisation des<br/> femmes soudes</p>
+                <p className="text-[4px] font-black text-blue-500 tracking-widest uppercase">Action Solidaire pour l'automisation des femmes soudes</p>
                 
               </div>
             </Link>
