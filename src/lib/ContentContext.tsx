@@ -96,10 +96,10 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
                 // Robust array check
                 const postsArray = Array.isArray(data) ? data : (data && typeof data === 'object' && Array.isArray((data as any).data) ? (data as any).data : []);
                 
-                // Adjust image URLs to be absolute if needed, or handle in component
+                const hostURL = api.defaults.baseURL?.replace('/api', '') || '';
                 const formattedData = postsArray.map((p: any) => ({
                     ...p,
-                    imageUrl: p.imageUrl ? `http://localhost:3000${p.imageUrl}` : undefined
+                    imageUrl: p.imageUrl ? (p.imageUrl.startsWith('http') ? p.imageUrl : `${hostURL}${p.imageUrl}`) : undefined
                 }));
 
                 setPosts(formattedData);
@@ -141,10 +141,10 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
 
-            // Update local state
+            const hostURL = api.defaults.baseURL?.replace('/api', '') || '';
             const newPost = {
                  ...data,
-                 imageUrl: data.imageUrl ? `http://localhost:3000${data.imageUrl}` : undefined
+                 imageUrl: data.imageUrl ? (data.imageUrl.startsWith('http') ? data.imageUrl : `${hostURL}${data.imageUrl}`) : undefined
             };
             setPosts((prev) => [newPost, ...prev]);
         } catch (error) {
@@ -173,16 +173,17 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
                  // If our frontend has `http://localhost:3000/uploads/...`, we should probably strip the domain or handled in backend.
                  // Simple hack: just send it as is, and ensure backend handles it or just ignores if not file.
                  // Actually backend logic: `const imageUrl = req.file ? ... : bodyImageUrl;`
-                 formData.append('imageUrl', updatedPost.imageUrl.replace('http://localhost:3000', ''));
+                  formData.append('imageUrl', updatedPost.imageUrl.replace(api.defaults.baseURL?.replace('/api', '') || '', ''));
              }
 
             const { data } = await api.put(`/posts/${updatedPost.id}`, formData, {
                  headers: { 'Content-Type': 'multipart/form-data' }
             });
 
+             const hostURL = api.defaults.baseURL?.replace('/api', '') || '';
              const newPost = {
                  ...data,
-                 imageUrl: data.imageUrl ? `http://localhost:3000${data.imageUrl}` : undefined
+                 imageUrl: data.imageUrl ? (data.imageUrl.startsWith('http') ? data.imageUrl : `${hostURL}${data.imageUrl}`) : undefined
             };
 
             setPosts((prev) => prev.map((p) => (p.id === updatedPost.id ? newPost : p)));
