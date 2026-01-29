@@ -35,6 +35,16 @@ const Index = () => {
   const partnerPosts = getPublishedPostsByType('partenaire');
   const newsPosts = getPublishedPostsByType('about');
   const [showAllNews, setShowAllNews] = React.useState(false);
+  const [isVideoOpen, setIsVideoOpen] = React.useState(false);
+
+  const getEmbedUrl = (url) => {
+    if (!url) return '';
+    const youtubeMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
+    if (youtubeMatch) {
+      return `https://www.youtube.com/embed/${youtubeMatch[1]}`;
+    }
+    return url;
+  };
 
   const displayedNews = showAllNews ? newsPosts : newsPosts.slice(0, 3);
 
@@ -123,27 +133,14 @@ const Index = () => {
 
           <div className="max-w-4xl mx-auto">
             <div className="group relative aspect-video bg-slate-800 dark:bg-slate-900 rounded-br-[3rem] rounded-tl-[3rem] overflow-hidden border border-white/5 shadow-2xl shadow-blue-900/20">
-              <img 
-                src="https://images.unsplash.com/photo-1516280440614-37939bbacd81?q=80&w=2070&auto=format&fit=crop" 
-                alt="Mission ASAFS" 
-                className="w-full h-full object-cover opacity-40 group-hover:scale-105 transition-transform duration-1000"
-              />
-
-              <div className="absolute inset-0 flex items-center justify-center">
-                <a 
-                  href={settings?.missionVideoUrl || "#"} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className={`w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:bg-blue-500 transition-all duration-300 ${!settings?.missionVideoUrl && 'opacity-50 cursor-not-allowed pointer-events-none'}`}
-                >
-                  <Play className="w-6 h-6 fill-current ml-1" />
-                </a>
-              </div>
-              <div className="absolute bottom-6 left-6 right-6">
-                <p className="text-white/60 text-[10px] font-black uppercase tracking-widest text-center">
-                  {t('mission.discover')}
-                </p>
-              </div>
+              <iframe
+                src={getEmbedUrl(settings?.missionVideoUrl || 'https://www.youtube.com/embed/dQw4w9WgXcQ')}
+                title="Mission Video"
+                className="w-full h-full"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
             </div>
           </div>
         </div>
