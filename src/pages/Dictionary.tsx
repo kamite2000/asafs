@@ -39,7 +39,7 @@ const Dictionary = () => {
                 </div>
 
                 {/* Controls */}
-                <div className="flex flex-col md:flex-row gap-6 mb-12 items-center justify-between sticky top-20 z-30 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md p-4 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/20 dark:shadow-none">
+                <div className="flex flex-col md:flex-row gap-6 mb-12 items-center justify-between bg-white dark:bg-slate-950 p-4 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/20 dark:shadow-none">
                     <div className="relative w-full md:max-w-md">
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                         <Input
@@ -102,7 +102,7 @@ const Dictionary = () => {
                 </div>
 
                 {/* Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 pt-8">
                     {filteredItems.length > 0 ? (
                         filteredItems.map((item) => (
                             <div 
