@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { usePosts, useCreatePost, useUpdatePost, useDeletePost, Post, ContentType } from '@/hooks/usePosts';
 import { useContent } from '@/lib/ContentContext';
 import { useTranslation } from 'react-i18next';
+import { DashboardSkeleton } from '@/components/ui/PageSkeleton';
 import {
     Card,
     CardContent,
@@ -549,11 +550,7 @@ const Dashboard = () => {
     };
 
     if (isLoading) {
-        return (
-            <div className="flex h-screen items-center justify-center bg-gray-100">
-                <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
-            </div>
-        );
+        return <DashboardSkeleton />;
     }
 
     if (!currentUser) return null;
