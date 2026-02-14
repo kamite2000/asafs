@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
@@ -8,24 +8,25 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { PageSkeleton } from '@/components/ui/PageSkeleton';
 import { ContentProvider } from '@/lib/ContentContext';
 import { ThemeProvider } from '@/lib/ThemeContext';
-
-import Index from './pages/Index';
-import Landing from './pages/Landing';
-import Programmes from './pages/programmes';
-import Evenement from './pages/evenement';
-import Contact from './pages/contact';
-import About from './pages/about';
-import Newsletter from './pages/newsletter';
-import Don from './pages/don';
-import Success from './pages/Success';
-import Dictionary from './pages/Dictionary';
-import Login from './pages/auth/Login';
-import Register from './pages/auth/Register';
-import ForgotPassword from './pages/auth/ForgotPassword';
-import AdminIndex from './pages/admin/Index';
-import Dashboard from './pages/admin/Dashboard';
 import Navbar from '@/components/ui/header';
 import RequireAuth from '@/components/auth/RequireAuth';
+
+// Lazy load page components
+const Index = lazy(() => import('./pages/Index'));
+const Landing = lazy(() => import('./pages/Landing'));
+const Programmes = lazy(() => import('./pages/programmes'));
+const Evenement = lazy(() => import('./pages/evenement'));
+const Contact = lazy(() => import('./pages/contact'));
+const About = lazy(() => import('./pages/about'));
+const Newsletter = lazy(() => import('./pages/newsletter'));
+const Don = lazy(() => import('./pages/don'));
+const Success = lazy(() => import('./pages/Success'));
+const Dictionary = lazy(() => import('./pages/Dictionary'));
+const Login = lazy(() => import('./pages/auth/Login'));
+const Register = lazy(() => import('./pages/auth/Register'));
+const ForgotPassword = lazy(() => import('./pages/auth/ForgotPassword'));
+const AdminIndex = lazy(() => import('./pages/admin/Index'));
+const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
 
 const queryClient = new QueryClient();
 

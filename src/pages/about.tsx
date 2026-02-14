@@ -3,13 +3,7 @@ import { useContent } from '@/lib/ContentContext';
 import Footer from '@/components/ui/Footer';
 import { Calendar, Users, Target, Award, ArrowRight, Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { PostCard } from "@/components/PostCard";
 
 const About = () => {
   const { t, i18n } = useTranslation();
@@ -130,58 +124,7 @@ const About = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {activitiesToShow.length > 0 ? (
               activitiesToShow.map((activity) => (
-                <Dialog key={activity.id}>
-                  <DialogTrigger asChild>
-                    <div className="group bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300">
-                      {activity.imageUrl && (
-                        <div className="relative h-44 overflow-hidden">
-                          <img src={activity.imageUrl} alt={activity.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                          <div className="absolute top-4 left-4 px-3 py-1 bg-white/95 dark:bg-slate-950/95 backdrop-blur-md rounded-full text-blue-600 dark:text-blue-400 text-[9px] font-black uppercase tracking-widest shadow-sm">
-                            {activity.category ? t(`categories.${activity.category}`, { defaultValue: activity.category }) : t('about.cat_general')}
-                          </div>
-                        </div>
-                      )}
-                      <div className="p-6">
-                        <div className="flex items-center gap-2 text-slate-400 dark:text-slate-500 text-[10px] font-bold mb-3 uppercase">
-                          <Calendar className="w-3 h-3" /> {activity.date}
-                        </div>
-                        <h3 className="text-lg font-black text-slate-900 dark:text-white mb-3 group-hover:text-blue-600 transition-colors line-clamp-1">
-                          {activity.title}
-                        </h3>
-                        <p className="text-sm text-slate-500 dark:text-slate-400 font-medium leading-relaxed mb-4 line-clamp-2">
-                          {activity.content}
-                        </p>
-                        <div className="w-8 h-0.5 bg-slate-100 group-hover:w-full group-hover:bg-blue-600 transition-all duration-500" />
-                      </div>
-                    </div>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-2xl p-0 overflow-hidden rounded-2xl border border-slate-800/10 dark:border-slate-800 bg-white dark:bg-slate-900">
-                    <div className="h-44 relative">
-                      {activity.imageUrl ? (
-                        <img src={activity.imageUrl} className="w-full h-full object-cover" alt={activity.title} />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-slate-950 text-white font-black text-2xl uppercase">ASAFS</div>
-                      )}
-                      <div className="absolute inset-0 bg-black/40" />
-                    </div>
-                    <div className="p-8 overflow-y-auto max-h-[60vh]">
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400 text-[10px] font-black uppercase">
-                          <Calendar className="w-3 h-3" /> {activity.date}
-                        </div>
-                        <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400 rounded-md text-[9px] font-black uppercase tracking-wider">
-                          {activity.category ? t(`categories.${activity.category}`, { defaultValue: activity.category }) : t('about.cat_general')}
-                        </span>
-                      </div>
-                      <DialogTitle className="text-2xl font-black text-slate-900 dark:text-white mb-4 uppercase tracking-tight">
-                        {activity.title}
-                      </DialogTitle>
-                      <div className="prose prose-slate dark:prose-invert prose-sm max-w-none text-slate-600 dark:text-slate-400 leading-relaxed font-medium whitespace-pre-wrap pr-2">
-                        {activity.content}
-                      </div>
-                    </div>
-                  </DialogContent>
-                </Dialog>
+                <PostCard key={activity.id} post={activity} t={t} />
               ))
             ) : (
               <div className="col-span-full py-16 text-center bg-slate-50 dark:bg-slate-900 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-800">

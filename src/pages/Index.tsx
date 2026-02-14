@@ -1,29 +1,29 @@
 /** @format */
 
 import * as React from "react";
-import { ReactDOM } from "react";
 import { Link } from "react-router-dom";
-import App from "@/App";
 import Footer from "@/components/ui/Footer";
 import {
   Carousel,
   CarouselItem,
-  CarouselApi,
   CarouselContent,
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { useContent } from "@/lib/ContentContext";
-import { BookOpen, Video, FileText, ChevronRight, Play, Target, Shield, Salad, Scale, HeartHandshake, ExternalLink, Users, GraduationCap, Globe, AlertCircle, Calendar, ArrowRight } from "lucide-react";
+import { BookOpen, Video, FileText, ChevronRight, Target, Shield, Salad, Scale, HeartHandshake, ExternalLink, Users, GraduationCap, Globe, AlertCircle, Calendar, ArrowRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-
-
+import { PostCard } from "@/components/PostCard";
 import { useSettings } from "@/hooks/useAdminData";
+
+const getEmbedUrl = (url: string | undefined) => {
+  if (!url) return '';
+  const youtubeMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
+  if (youtubeMatch) {
+    return `https://www.youtube.com/embed/${youtubeMatch[1]}`;
+  }
+  return url;
+};
 
 const Index = () => {
   const { t } = useTranslation();
@@ -37,14 +37,7 @@ const Index = () => {
   const [showAllNews, setShowAllNews] = React.useState(false);
   const [isVideoOpen, setIsVideoOpen] = React.useState(false);
 
-  const getEmbedUrl = (url) => {
-    if (!url) return '';
-    const youtubeMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
-    if (youtubeMatch) {
-      return `https://www.youtube.com/embed/${youtubeMatch[1]}`;
-    }
-    return url;
-  };
+
 
   const displayedNews = showAllNews ? newsPosts : newsPosts.slice(0, 3);
 
@@ -430,43 +423,7 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {newsPosts.length > 0 ? (
               displayedNews.map((post) => (
-                <Dialog key={post.id}>
-                  <DialogTrigger asChild>
-                    <div className="group bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer">
-                      <div className="text-blue-600 dark:text-blue-400 text-[10px] font-black mb-4 uppercase flex items-center gap-2">
-                        <Calendar className="w-3 h-3" /> {post.date}
-                      </div>
-                      <h3 className="text-xl font-black text-slate-900 dark:text-white mb-4 group-hover:text-blue-600 transition-colors line-clamp-2 uppercase tracking-tight">
-                        {post.title}
-                      </h3>
-                      <p className="text-base text-slate-500 dark:text-slate-400 font-medium leading-relaxed mb-6 line-clamp-3">
-                        {post.content}
-                      </p>
-                      <button className="flex items-center gap-2 text-[10px] font-black text-blue-600 uppercase tracking-widest hover:translate-x-1 transition-transform">
-                        {t('about.read_more')} <ArrowRight className="w-3 h-3" />
-                      </button>
-                    </div>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-2xl p-0 overflow-hidden rounded-2xl border border-slate-800/10 dark:border-slate-800 bg-white dark:bg-slate-900">
-                    <div className="h-44 relative">
-                        {post.imageUrl ? (
-                            <img src={post.imageUrl} className="w-full h-full object-cover" alt={post.title} />
-                        ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-slate-950 text-white font-black text-2xl uppercase">ASAFS</div>
-                        )}
-                        <div className="absolute inset-0 bg-black/40" />
-                    </div>
-                    <div className="p-8">
-                        <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400 text-[10px] font-black uppercase mb-4">
-                            <Calendar className="w-3 h-3" /> {post.date}
-                        </div>
-                        <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-4 uppercase tracking-tight">{post.title}</h2>
-                        <div className="prose prose-slate dark:prose-invert prose-sm max-w-none text-slate-600 dark:text-slate-400 leading-relaxed font-medium whitespace-pre-wrap max-h-[50vh] overflow-y-auto pr-2">
-                            {post.content}
-                        </div>
-                    </div>
-                  </DialogContent>
-                </Dialog>
+                <PostCard key={post.id} post={post} t={t} />
               ))
             ) : (
               <div className="col-span-full py-16 text-center bg-white dark:bg-slate-900 rounded-3xl border border-dashed border-slate-200 dark:border-slate-800">
