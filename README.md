@@ -293,7 +293,7 @@ cd asafs
 #### 2️⃣ Installer les Dépendances Frontend
 
 ```bash
-pm install
+npm install
 ```
 
 #### 3️⃣ Installer les Dépendances Backend
