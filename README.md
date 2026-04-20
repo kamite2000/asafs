@@ -1,61 +1,99 @@
-# Welcome to Asafs project
+# 🚀 ASAFS
 
-## Project info
+## 📋 Vue d'ensemble
 
-## How can I edit this code?
+**ASAFS** est une application TypeScript/React moderne construite avec Vite, offrant une interface utilisateur professionnelle et performante.
 
-There are several ways of editing your application.
+## ✨ Caractéristiques
 
+- ⚡ **Performance optimale** avec Vite et React
+- 🎨 **Design moderne** avec Tailwind CSS et shadcn-ui
+- 📝 **Code typé** avec TypeScript pour plus de fiabilité
+- 🔧 **Architecture scalable** et maintenable
 
+## 🛠️ Stack Technologique
 
-**Use your preferred IDE**
+| Technologie | Description |
+|-------------|-------------|
+| **TypeScript** | Langage principal (94%) - Typage statique |
+| **React** | Framework UI moderne |
+| **Vite** | Build tool ultra-rapide |
+| **Tailwind CSS** | Styling utilitaire |
+| **shadcn-ui** | Composants UI réutilisables |
+| **PostgreSQL** | Base de données (3.1%) |
 
-If you want to work locally using your own IDE, you can clone this repo and push changes.
+## 🚀 Démarrage Rapide
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Prérequis
 
-Follow these steps:
+- **Node.js** v18+ et npm
+- [nvm recommandé pour la gestion des versions](https://github.com/nvm-sh/nvm#installing-and-updating)
+
+### Installation
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
+# 1. Cloner le repository
 git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# 2. Accéder au répertoire
+cd asafs
 
-# Step 3: Install the necessary dependencies.
-npm i
+# 3. Installer les dépendances
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# 4. Lancer le serveur de développement
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+L'application sera accessible sur `http://localhost:5173` avec rechargement automatique.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 📝 Méthodes de Développement
 
-**Use GitHub Codespaces**
+### Option 1 : IDE Local Préféré ✏️
+- Clone le repository
+- Utilise ton IDE préféré (VS Code, WebStorm, IntelliJ, etc.)
+- Fais tes modifications et pousse les changements
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Option 2 : Édition Directe sur GitHub 🌐
+1. Navigue jusqu'au fichier désiré
+2. Clique sur l'icône ✏️ en haut à droite
+3. Apporte tes modifications
+4. Commit les changements avec un message descriptif
 
-## What technologies are used for this project?
+### Option 3 : GitHub Codespaces ☁️
+1. Va sur la [page principale du repository](https://github.com/kamite2000/asafs)
+2. Clique sur le bouton **Code** (vert)
+3. Sélectionne l'onglet **Codespaces**
+4. Clique sur **Create codespace on main**
+5. Édite directement dans le navigateur et commit tes changements
 
-This project is built with .
+## 🌐 Déploiement
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+[À compléter avec tes instructions de déploiement spécifiques]
 
-## How can I deploy this project?
+## 🔗 Domaine Personnalisé
 
+[À compléter avec tes informations]
 
-## I want to use a custom domain - is that possible?
+## 📖 Documentation Utile
 
+- [React Documentation](https://react.dev)
+- [TypeScript Handbook](https://www.typescriptlang.org)
+- [Vite Guide](https://vitejs.dev)
+- [Tailwind CSS Docs](https://tailwindcss.com)
+- [shadcn-ui Components](https://ui.shadcn.com)
+
+## 📄 Licence
+
+[À spécifier]
+
+## 👥 Contact & Support
+
+Pour toute question, bug ou suggestion :
+- Ouvre une [issue](https://github.com/kamite2000/asafs/issues)
+- Consulte les [discussions](https://github.com/kamite2000/asafs/discussions)
+- Crée une [pull request](https://github.com/kamite2000/asafs/pulls)
+
+---
+
+**Merci d'utiliser ASAFS ! 🎉**
